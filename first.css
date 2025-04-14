@@ -1,22 +1,59 @@
+/* first.css */
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-a {
-  text-decoration: none;
-  color: black;
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .truy-cap {
-  width: 40%;
-  height: 40%;
-  background-color: aqua;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+.truy-cap a {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 12px 24px;
+  margin: 10px 0;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  width: 100%;
+  font-weight: 500;
+}
+
+.truy-cap a:first-child {
+  background: #2c3e50;
+  color: white;
+}
+
+.truy-cap a:first-child:hover {
+  background: #34495e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.truy-cap a:last-child {
+  background: #3498db;
+  color: white;
+}
+
+.truy-cap a:last-child:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
