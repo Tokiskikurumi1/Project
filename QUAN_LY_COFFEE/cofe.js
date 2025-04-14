@@ -151,3 +151,32 @@ document.addEventListener("DOMContentLoaded", () => {
   updateProductList("traditional-coffee");
   attachCartEvents();
 });
+
+//check đăng nhập
+document.addEventListener("DOMContentLoaded", function () {
+  const loginTable = document.querySelector(".login-table");
+
+  // Kiểm tra xem có user đăng nhập không
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  if (currentUser) {
+    // Nếu đã đăng nhập, hiển thị tên user và nút đăng xuất
+    loginTable.innerHTML = `
+          <span>Xin chào, ${currentUser.username} | <a href="#" id="logout">Đăng xuất</a></span>
+      `;
+
+    // Thêm sự kiện cho nút đăng xuất
+    document.getElementById("logout").addEventListener("click", function (e) {
+      e.preventDefault();
+      // Xóa thông tin user khỏi localStorage
+      localStorage.removeItem("currentUser");
+      // Tải lại trang để cập nhật giao diện
+      window.location.reload();
+    });
+  } else {
+    // Nếu chưa đăng nhập, giữ nguyên giao diện mặc định
+    loginTable.innerHTML = `
+          <span><a href="./login_register/login.html">Đăng nhập</a></span>
+      `;
+  }
+});
