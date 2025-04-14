@@ -1,0 +1,126 @@
+@import url("https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+
+* {
+  box-sizing: border-box;
+  font-family: "Merienda", cursive;
+  font-optical-sizing: auto;
+  font-style: normal;
+  text-decoration: none;
+  list-style: none;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  font-family: "arial";
+  margin: 0;
+  background: url("../QUAN_LY_COFFEE/HomepageImage/bg.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  object-fit: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login {
+  width: 30%;
+  min-height: 100px;
+  border: 1px solid white;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.login h2 {
+  padding: 8px 10px;
+  color: white;
+  text-transform: uppercase;
+  font-size: 2rem;
+}
+
+.B1 {
+  position: relative;
+  margin: 30px auto;
+  width: 80%;
+  border-bottom: 2px solid #fff;
+}
+
+.B1 label {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  /* transform: translateY(-50%); */
+  color: #fff;
+  font-size: 1em;
+  pointer-events: none;
+  transition: 0.25s;
+}
+
+input:focus ~ label,
+input:valid ~ label {
+  top: -5px;
+  font-size: 12px;
+}
+
+.B1 input {
+  width: 100%;
+  height: 50px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  padding: 0 35px 0 5px;
+  color: #fff;
+}
+
+.B1 ion-icon {
+  position: absolute;
+  right: 8px;
+  color: #fff;
+  font-size: 1.2em;
+  top: 20px;
+}
+
+.B2 {
+  margin: -15px 2.8rem 15px;
+  font-size: 0.9em;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+}
+
+.B2 label input {
+  margin-right: 3px;
+}
+
+.B2 label a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.B2 label a:hover {
+  text-decoration: underline;
+}
+
+button {
+  width: 80%;
+  height: 40px;
+  border-radius: 40px;
+  background: #fff;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* MAIN_ADMIN */
+#header h1 {
+  width: 100%;
+}
+
+#header h1 {
+  text-align: center;
+  color: red;
+}

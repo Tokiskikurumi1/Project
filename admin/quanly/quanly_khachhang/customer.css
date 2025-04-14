@@ -1,0 +1,103 @@
+/* customer.css */
+* {
+  box-sizing: border-box;
+  font-family: "Merienda", cursive;
+  font-optical-sizing: auto;
+  font-style: normal;
+  text-decoration: none;
+  list-style: none;
+}
+
+body {
+  width: 100%;
+  font-family: "arial";
+  margin: 0;
+}
+
+#container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 20% 80%;
+}
+
+.side-menu {
+  width: 100%;
+  padding-top: 100px;
+  border: 1px solid silver;
+}
+
+.list-menu li {
+  padding: 8px 17px;
+}
+
+.list-menu a {
+  color: black;
+  text-transform: uppercase;
+}
+
+.right {
+  width: 100%;
+  text-align: center;
+}
+
+.content-right {
+  width: 80%;
+  text-align: center;
+  margin: 0px auto;
+}
+
+.table-list {
+  width: 100%;
+  text-align: center;
+}
+
+.table-list th:nth-child(1) {
+  width: 10%;
+}
+
+.table-list th:nth-child(2),
+.table-list th:nth-child(3),
+.table-list th:nth-child(4),
+.table-list th:nth-child(5) {
+  width: 20%; /* Điều chỉnh cho 5 cột */
+}
+
+.table-list th:nth-child(6) {
+  width: 20%; /* Cột Tùy chỉnh */
+}
+
+/* Form sửa khách hàng */
+#editCustomerForm {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f9f9f9;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000; /* Đè lên nội dung khác */
+  width: 400px;
+  text-align: center;
+  display: none;
+}
+
+#editCustomerForm input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 8px;
+}
+
+#editCustomerForm button {
+  margin: 5px;
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#editCustomerForm button:hover {
+  background-color: #45a049;
+}

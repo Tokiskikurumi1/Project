@@ -1,0 +1,429 @@
+@import url("https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+
+* {
+  box-sizing: border-box;
+  font-family: "Merienda", cursive;
+  font-optical-sizing: auto;
+  font-style: normal;
+  text-decoration: none;
+  list-style: none;
+}
+
+body {
+  width: 100%;
+  font-family: "arial";
+  margin: 0;
+}
+
+.content {
+  padding: 50px 100px;
+}
+
+/* HEADER */
+#header {
+  width: 100%;
+}
+
+/* THANH LOGIN / SIGN UP */
+.login-table {
+  width: 100%;
+  text-align: right;
+  color: #1b1b1b;
+  background-color: black;
+}
+
+.login-table span {
+  color: white;
+  padding-right: 10px;
+}
+
+.login-table a {
+  color: white;
+}
+
+/* TABBAR-CONTROL */
+.tabbar-control {
+  width: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.5s ease; /* Hiệu ứng trượt mượt mà */
+  z-index: 1000;
+  position: relative;
+}
+
+.tabbar-control .search-basket i {
+  cursor: pointer;
+}
+
+/* Class khi cố định và ẩn phía trên */
+.tabbar-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translateY(-100%); /* Ẩn phía trên màn hình */
+}
+
+/* Class khi hiển thị và trượt xuống */
+.tabbar-fixed.active {
+  transform: translateY(0); /* Trượt xuống vị trí top: 0 */
+}
+
+/* LOGO */
+.logo img {
+  width: 60px;
+}
+
+/* MENU */
+.ul-bar {
+  display: flex;
+  text-transform: uppercase;
+}
+
+.ul-bar a {
+  padding: 8px 17px;
+}
+
+.ul-bar a:hover {
+  background-color: #bc9667;
+  border-radius: 10px;
+}
+
+/* SEARCH & BASKET */
+.search-basket i {
+  font-size: 22px;
+  padding: 8px 17px;
+  column-gap: 0.8rem;
+  color: white;
+}
+
+.search-basket :hover {
+  color: #bc9667;
+}
+
+#menu-icon {
+  font-size: 22px;
+  cursor: pointer;
+  color: white;
+  display: none;
+}
+
+.search-box {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%);
+  width: 100%;
+  display: none;
+}
+
+.search-box.active {
+  display: block; /* Hiện khi có class active */
+}
+.search-box input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 20px;
+}
+
+/* CONTAINER */
+#container {
+  width: 100%;
+}
+
+.home {
+  width: 100%;
+  min-height: 100vh;
+  background: url("./HomepageImage/bg.png") center/cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, auto));
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.home-text h1 {
+  font-size: 3.4rem;
+  color: orange;
+}
+
+.home-text p {
+  color: white;
+  font-size: 1rem;
+  margin: 0.5rem 0 1.4rem;
+}
+
+.home-text a {
+  padding: 10px 40px;
+  background-color: #bc9667;
+  border-radius: 10px;
+}
+
+.home img {
+  width: 100%;
+}
+
+/* INTRODUCT */
+.introduct {
+  width: 100%;
+  min-height: 50vh;
+  background-color: white;
+  font-size: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, auto));
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.introduct .first-img {
+  width: 100%;
+}
+
+.reason-introduct {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 100%; /* Mỗi .coffee-blood-icon trên một hàng */
+  gap: 1.5rem;
+}
+
+.coffee-blood-icon {
+  width: 100%;
+  min-width: 200px;
+  display: flex; /* Giữ flex để hình ảnh và văn bản nằm ngang */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  gap: 1rem; /* Khoảng cách giữa hình ảnh và văn bản */
+}
+
+.coffee-blood-icon img {
+  width: 70px;
+  height: 80px;
+}
+
+.coffee-blood-icon div {
+  display: flex;
+  flex-direction: column; /* Các đoạn văn bản xếp theo cột (mỗi đoạn trên một dòng) */
+  line-height: 1.5rem; /* Tăng line-height để chữ không bị đè */
+  gap: 0.5rem; /* Khoảng cách giữa các đoạn văn bản */
+}
+
+.coffee-blood-icon div p {
+  margin: 0; /* Bỏ margin mặc định của thẻ p để kiểm soát khoảng cách tốt hơn */
+}
+
+/* PRODUCTS */
+.products {
+  text-align: center;
+}
+
+.product-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, auto));
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.product-content .box {
+  position: relative;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 0.5rem;
+  box-shadow: 5px 5px 10px black;
+}
+
+.product-content img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  object-position: center;
+  padding: 20px;
+  border-radius: 0.5rem;
+  background-color: grey;
+}
+
+.product-content .box .info {
+  display: flex;
+  justify-content: space-around;
+}
+
+.product-content .box .info span {
+  padding: 0.5rem 1rem;
+  background-color: #bc9667;
+  border-radius: 10px;
+}
+
+.product-content .box .info a {
+  padding: 0.5rem 1rem;
+  background-color: #bc9667;
+  border-radius: 10px;
+}
+
+.product-content .box .info a:hover {
+  background-color: orange;
+}
+/* CUSTOMER FEEDBACK */
+.customer-feedback {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.feed-back {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, auto));
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.feed-back .feed-back1 {
+  box-shadow: 5px 5px 10px black;
+  border-radius: 1rem;
+}
+
+.feed-back1 i {
+  color: #bc9667;
+}
+
+.feed-back .feed-back1 img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.feed-back :hover {
+  background-color: #eeeae1;
+}
+/* FOOTER  */
+#footer {
+  width: 100%;
+  background-color: #eeeae1;
+  padding: 30px;
+}
+
+#footer > h2 {
+  text-align: center;
+}
+
+.footer-contact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, auto));
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.footer-contact h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.content-footer .social-icon i {
+  font-size: 24px;
+  padding: 10px;
+  background-color: grey;
+  border-radius: 0.2rem;
+}
+
+.content-footer .social-icon i:hover {
+  background-color: red;
+}
+
+.content-footer a {
+  color: black;
+}
+
+.social-icon span {
+  color: black;
+}
+
+.social-icon.social-icon-last i {
+  background-color: transparent;
+}
+/* LAST */
+#last {
+  padding: 20px;
+  text-align: center;
+}
+
+/* MEDIA */
+
+@media (max-width: 1058px) {
+  header {
+    padding: 16px 60px;
+  }
+  .content {
+    padding: 50px 60px;
+  }
+  .home-text h1 {
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 991px) {
+  header {
+    padding: 16px 4%;
+  }
+  .content {
+    padding: 50px 4%;
+  }
+  .home-text h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 12px 4%;
+  }
+  #menu-icon {
+    display: initial;
+  }
+  .ul-bar {
+    position: absolute;
+    top: -570px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background-color: black;
+    row-gap: 1.4rem;
+    padding: 20px;
+    transition: 0.3s;
+    text-align: center;
+    margin: 0px;
+  }
+  .ul-bar a:hover {
+    background-color: red;
+  }
+  .ul-bar.active {
+    top: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  header {
+    padding: 11px 4%;
+  }
+  .login img {
+    width: 45px;
+  }
+  .home-text {
+    padding-top: 15px;
+  }
+  .home-text h1 {
+    font-size: 1.4rem;
+  }
+  .home-text p {
+    font-size: 0.8rem;
+    font-weight: 300;
+  }
+  .about-text h1 {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+}

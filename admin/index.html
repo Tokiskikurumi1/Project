@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="admin.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <title>Login-Admin</title>
+  </head>
+  <body>
+    <div class="login">
+      <h2>Login</h2>
+      <div class="B1">
+        <ion-icon name="mail-outline"></ion-icon>
+        <input id="TK" type="text" required />
+        <label for="">Tài khoản</label>
+      </div>
+      <div class="B1">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+        <input id="MK" type="password" required />
+        <label for="">Mật khẩu</label>
+      </div>
+      <div class="B2">
+        <label for=""><input type="checkbox" />Nhớ mật khẩu </label>
+      </div>
+      <button onclick="Login()">Đăng nhập</button>
+    </div>
+    <script>
+      function Login() {
+        const TK = document.querySelector("#TK");
+        const MK = document.querySelector("#MK");
+        const tk = TK.value;
+        const mk = MK.value;
+        if (tk === "admin" && mk === "admin") {
+          window.location.href = "../admin/quanly/Main_Admin.html";
+        } else {
+          alert("Tài khoản hoặc mật khẩu không chính xác");
+        }
+      }
+    </script>
+  </body>
+</html>

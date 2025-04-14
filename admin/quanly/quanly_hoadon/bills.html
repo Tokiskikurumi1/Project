@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="bills.css" />
+    <title>Quản lý hóa đơn</title>
+  </head>
+  <body>
+    <div id="container">
+      <nav class="side-menu">
+        <ul class="list-menu">
+          <li><a href="../Main_Admin.html">Quản lý sản phẩm</a></li>
+          <li><a href="#">Quản lý hóa đơn</a></li>
+          <li>
+            <a href="../quanly_khachhang/customer.html">Quản lý khách hàng</a>
+          </li>
+          <li><a href="../../login_admin.html">Đăng xuất</a></li>
+        </ul>
+      </nav>
+      <div class="right">
+        <h1>Danh sách hóa đơn</h1>
+
+        <!-- Danh sách hóa đơn -->
+        <div class="content-right">
+          <table class="table-list" cellpadding="5" cellspacing="0" border="1">
+            <tr>
+              <th>STT</th>
+              <th>Mã hóa đơn</th>
+              <th>Ngày lập</th>
+              <th>Xem chi tiết</th>
+              <th>Tùy chỉnh</th>
+            </tr>
+            <tbody id="bill-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form sửa hóa đơn (ẩn mặc định) -->
+    <div id="editBillForm" style="display: none">
+      <h3>Sửa thông tin khách hàng</h3>
+      <input type="text" id="editName" placeholder="Tên khách hàng" />
+      <input type="tel" id="editPhone" placeholder="Số điện thoại" />
+      <input type="text" id="editAddress" placeholder="Địa chỉ" />
+      <button onclick="saveEditBill()">Lưu</button>
+      <button onclick="cancelEditBill()">Hủy</button>
+    </div>
+
+    <!-- Form xem chi tiết hóa đơn (ẩn mặc định) -->
+    <div id="billDetailForm" style="display: none">
+      <h3>Chi tiết hóa đơn</h3>
+      <table id="billDetailTable" cellpadding="5" cellspacing="0" border="1">
+        <tr>
+          <th>Hình ảnh</th>
+          <th>Tên sản phẩm</th>
+          <th>Số lượng</th>
+        </tr>
+        <tbody id="billDetailItems"></tbody>
+      </table>
+      <p id="billTotal" style="text-align: right; margin-top: 10px"></p>
+      <button onclick="hideBillDetailForm()">Đóng</button>
+    </div>
+
+    <script src="bills.js"></script>
+  </body>
+</html>

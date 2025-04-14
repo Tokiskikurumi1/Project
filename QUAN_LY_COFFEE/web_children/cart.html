@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="coffees.css" />
+    <title>Giỏ hàng</title>
+    <style>
+      a,
+      span {
+        text-decoration: none;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div id="header">
+      <div class="login-table">
+        <span><a href="">Đăng ký</a>/<a href="">Đăng nhập</a></span>
+      </div>
+      <div class="tabbar-control">
+        <a href="#" class="logo"
+          ><img src="../HomepageImage/logo.png" alt=""
+        /></a>
+        <i class="fa-solid fa-bars" id="menu-icon"></i>
+        <ul class="ul-bar">
+          <li><a href="../index.html">Trang chủ</a></li>
+          <li><a href="./introduct_web.html">Giới thiệu</a></li>
+          <li><a href="./products.html">Sản phẩm</a></li>
+          <li><a href="./contact.html">Liên hệ</a></li>
+        </ul>
+        <div class="search-basket">
+          <a href="#"><i class="fa-solid fa-basket-shopping"></i></a>
+          <i id="search-icon" class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="search-box">
+          <input type="search" placeholder="Nhập sản phẩm tìm kiếm" />
+        </div>
+      </div>
+    </div>
+    <!-- CONTAINER -->
+    <div id="container">
+      <h1>GIỎ HÀNG</h1>
+      <div class="infor-cart">
+        <div class="left-infor-cart">
+          <table class="table-infor-cart">
+            <tr>
+              <th>Tên sản phẩm</th>
+              <th>Đơn giá</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
+            </tr>
+            <tbody id="cart-items"></tbody>
+          </table>
+        </div>
+        <div class="right-infor-cart">
+          <p>Tạm tính</p>
+          <hr />
+          <div class="total">
+            <p>Tổng</p>
+            <p id="total-price">0VND</p>
+          </div>
+          <button onclick="showCheckoutForm()">Đặt hàng</button>
+        </div>
+      </div>
+    </div>
+    <!-- Form thanh toán (ẩn mặc định) -->
+    <div id="checkoutForm" style="display: none">
+      <h3>Thông tin thanh toán</h3>
+      <input type="text" id="customerName" placeholder="Tên khách hàng" />
+      <input type="tel" id="customerPhone" placeholder="Số điện thoại" />
+      <input type="text" id="customerAddress" placeholder="Địa chỉ giao hàng" />
+      <button onclick="processCheckout()">Xác nhận</button>
+      <button onclick="hideCheckoutForm()">Hủy</button>
+    </div>
+    <script src="cart.js"></script>
+  </body>
+</html>

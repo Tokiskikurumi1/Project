@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="coffees.css" />
+    <title>Sản Phẩm-Coffee Shop</title>
+    <style>
+      a,
+      span {
+        text-decoration: none;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div id="header">
+      <div class="login-table">
+        <span><a href="">Đăng ký</a>/<a href="">Đăng nhập</a></span>
+      </div>
+      <div class="tabbar-control">
+        <a href="../index.html" class="logo"
+          ><img src="../HomepageImage/logo.png" alt=""
+        /></a>
+        <i class="fa-solid fa-bars" id="menu-icon"></i>
+        <ul class="ul-bar">
+          <li><a href="../Main.html">Trang chủ</a></li>
+          <li><a href="./introduct_web.html">Giới thiệu</a></li>
+          <li><a href="#">Sản phẩm</a></li>
+          <li><a href="../web_children/contact.html">Liên hệ</a></li>
+        </ul>
+        <div class="search-basket">
+          <a href="./cart.html"><i class="fa-solid fa-basket-shopping"></i></a>
+          <!-- <i id="search-icon" class="fa-solid fa-magnifying-glass"></i> -->
+        </div>
+        <!-- <div class="search-box">
+          <input type="search" placeholder="Nhập sản phẩm tìm kiếm" />
+        </div> -->
+      </div>
+    </div>
+    <!-- CONTAINER -->
+    <div class="container">
+      <div class="content slogan products"><h1>sản phẩm của chúng tôi</h1></div>
+      <div class="content list-food">
+        <div class="left-list-food">
+          <h3>Danh mục</h3>
+          <ul>
+            <li class="toggle-choose-type">
+              Cà phê
+              <ul class="type-of-coffee">
+                <li data-type="traditional-coffee">Cà phê truyền thống</li>
+                <li data-type="Espresso-based">Espresso-based</li>
+                <li data-type="cool-coffee">Cà phê lạnh & sáng tạo</li>
+                <li data-type="foreign-coffee">Cà phê pha phin ngoại nhập</li>
+              </ul>
+            </li>
+            <li class="toggle-choose-type">
+              Trà Sữa
+              <ul class="type-of-coffee">
+                <li data-type="traditional-milk">Trà sữa truyền thống</li>
+                <li data-type="matcha-milk">Trà sữa Matcha</li>
+                <li data-type="o-long-milk">Trà sữa ô long</li>
+                <li data-type="hongtra-milk">Trà sữa hồng trà</li>
+              </ul>
+            </li>
+            <li class="toggle-choose-type">
+              Sinh tố
+              <ul class="type-of-coffee">
+                <li data-type="fruit-smoothie">Sinh tố trái cây</li>
+                <li data-type="vegetable-smoothie">Sinh tố rau củ</li>
+                <li data-type="combine-smoothie">Sinh tố kết hợp</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="right-list-food">
+          <input type="text" placeholder="Nhập sản phẩm cần tìm kiếm" />
+          <span>Tìm kiếm</span>
+          <div class="list-food-box">
+            <div class="box">
+              <img src="../HomepageImage/p2.png" alt="" />
+              <h3>Cà phê trứng muối</h3>
+              <div class="info">
+                <span>100.000VND</span>
+                <i class="fa-solid fa-cart-plus"></i>
+              </div>
+            </div>
+            <div class="box">
+              <img src="../HomepageImage/p2.png" alt="" />
+              <h3>Cà phê trứng muối</h3>
+              <div class="info">
+                <span>100.000VND</span>
+                <i class="fa-solid fa-cart-plus"></i>
+              </div>
+            </div>
+            <div class="box">
+              <img src="../HomepageImage/p2.png" alt="" />
+              <h3>Cà phê trứng muối</h3>
+              <div class="info">
+                <span>100.000VND</span>
+                <i class="fa-solid fa-cart-plus"></i>
+              </div>
+            </div>
+            <div class="box">
+              <img src="../HomepageImage/p2.png" alt="" />
+              <h3>Cà phê trứng muối</h3>
+              <div class="info">
+                <span>100.000VND</span>
+                <i class="fa-solid fa-cart-plus"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../cofe.js"></script>
+  </body>
+</html>
