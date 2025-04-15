@@ -245,6 +245,7 @@ Btn_send.addEventListener("click", function () {
 });
 
 //check đăng nhập
+// Kiểm tra trạng thái đăng nhập khi tải trang
 document.addEventListener("DOMContentLoaded", function () {
   const loginTable = document.querySelector(".login-table");
 
@@ -252,10 +253,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   if (currentUser) {
-    // Nếu đã đăng nhập, hiển thị tên user và nút đăng xuất
+    // Nếu đã đăng nhập, hiển thị "Chào mừng: tên user" và nút đăng xuất
     loginTable.innerHTML = `
-          <span>Xin chào, ${currentUser.username} | <a href="#" id="logout">Đăng xuất</a></span>
-      `;
+      <span>Chào mừng: ${currentUser.username} | <a href="#" id="logout">Đăng xuất</a></span>
+    `;
 
     // Thêm sự kiện cho nút đăng xuất
     document.getElementById("logout").addEventListener("click", function (e) {
@@ -266,9 +267,9 @@ document.addEventListener("DOMContentLoaded", function () {
       window.location.reload();
     });
   } else {
-    // Nếu chưa đăng nhập, giữ nguyên giao diện mặc định
+    // Nếu chưa đăng nhập, hiển thị liên kết đăng nhập
     loginTable.innerHTML = `
-          <span><a href="./login_register/login.html">Đăng nhập</a></span>
-      `;
+      <span><a href="./login_register/login.html">Đăng nhập</a></span>
+    `;
   }
 });
