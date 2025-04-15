@@ -413,6 +413,14 @@ body {
 
 /* CONTACT */
 
+.slogan-contact {
+  font-size: 2rem;
+}
+
+.slogan-contact span {
+  color: black;
+}
+
 .content.infor-contact {
   padding: 20px 100px;
   display: grid;
@@ -459,7 +467,10 @@ body {
   cursor: pointer;
 }
 
-/* coffees.css */
+input:focus,
+textarea:focus {
+  outline: none;
+}
 
 /* CART */
 #container {
@@ -679,6 +690,9 @@ body {
   .left-profession {
     padding-left: 20px;
     padding-right: 20px;
+  }
+  .slogan-contact {
+    font-size: 1rem;
   }
 }
 

@@ -17,20 +17,6 @@ window.addEventListener("scroll", function () {
 
 // Đợi DOM tải xong
 document.addEventListener("DOMContentLoaded", () => {
-  // // SEARCH
-  // const searchIcon = document.querySelector("#search-icon");
-  // const searchBox = document.querySelector(".search-box");
-  // if (searchIcon && searchBox) {
-  //   searchIcon.addEventListener("click", toggleSearch);
-  //   searchIcon.addEventListener("touchstart", toggleSearch); // Hỗ trợ mobile
-  // }
-
-  // function toggleSearch(e) {
-  //   searchBox.classList.toggle("active");
-  //   ul_bar.classList.remove("active");
-  //   e.preventDefault(); // Ngăn hành vi mặc định trên mobile
-  // }
-
   // Chạy menu
   const menu_icon = document.querySelector("#menu-icon");
   const ul_bar = document.querySelector(".ul-bar");
@@ -122,6 +108,70 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Xử lý tìm kiếm sản phẩm
+  const searchInput = document.querySelector(
+    '.right-list-food input[type="text"]'
+  );
+  const searchButton = document.querySelector(".right-list-food span");
+
+  if (searchInput && searchButton) {
+    // Tìm kiếm khi nhấn nút "Tìm kiếm"
+    searchButton.addEventListener("click", () => {
+      const keyword = searchInput.value.trim().toLowerCase();
+      searchProducts(keyword);
+    });
+
+    // Tìm kiếm khi nhấn Enter trong ô input
+    searchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        const keyword = searchInput.value.trim().toLowerCase();
+        searchProducts(keyword);
+      }
+    });
+
+    // Tìm kiếm theo thời gian thực khi người dùng nhập (tùy chọn)
+    // searchInput.addEventListener("input", () => {
+    //   const keyword = searchInput.value.trim().toLowerCase();
+    //   searchProducts(keyword);
+    // });
+  }
+
+  // Hàm tìm kiếm sản phẩm
+  function searchProducts(keyword) {
+    const products = getProducts(); // Lấy tất cả sản phẩm từ LocalStorage
+    const rightListFood = document.querySelector(".list-food-box");
+    let html = "";
+
+    // Lọc sản phẩm từ tất cả các danh mục
+    let foundProducts = [];
+    Object.keys(products).forEach((type) => {
+      const matchingProducts = products[type].filter((product) =>
+        product.name.toLowerCase().includes(keyword)
+      );
+      foundProducts = foundProducts.concat(matchingProducts);
+    });
+
+    // Hiển thị kết quả tìm kiếm
+    if (foundProducts.length > 0) {
+      foundProducts.forEach((product) => {
+        html += `
+          <div class="box">
+            <img src="${product.image}" alt="${product.name}" />
+            <h3>${product.name}</h3>
+            <div class="info">
+              <span>${product.price}</span>
+              <i class="fa-solid fa-cart-plus"></i>
+            </div>
+          </div>
+        `;
+      });
+    } else {
+      html = "<p>Không tìm thấy sản phẩm nào.</p>";
+    }
+
+    rightListFood.innerHTML = html;
+    attachCartEvents(); // Gắn lại sự kiện cho các nút "Thêm vào giỏ hàng"
+  }
   // Hàm cập nhật danh sách sản phẩm
   function updateProductList(type) {
     const products = getProducts(); // Lấy dữ liệu từ LocalStorage
@@ -150,6 +200,48 @@ document.addEventListener("DOMContentLoaded", () => {
   // Hiển thị danh sách mặc định khi tải trang
   updateProductList("traditional-coffee");
   attachCartEvents();
+});
+
+// GỬI LIÊN HỆ
+const Btn_send = document.querySelector(".btn-send");
+Btn_send.addEventListener("click", function () {
+  const fullname = document.querySelector(".fullname-contact");
+  const email_contact = document.querySelector(".email-contact");
+  const content_contact = document.querySelector(".content-contact");
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (
+    !fullname.value.trim() ||
+    !email_contact.value.trim() ||
+    !content_contact.value.trim()
+  ) {
+    alert("Vui lòng điền đầy đủ thông tin!");
+    return;
+  }
+  if (!emailRegex.test(email_contact.value.trim())) {
+    alert("Nhập Email đúng định dạng!");
+    return;
+  }
+  // Lưu thông tin vào LocalStorage
+  const contactData = {
+    fullname,
+    email: email_contact.value.trim(),
+    content: content_contact.value.trim(),
+    timestamp: new Date().toISOString(),
+  };
+
+  // Lấy danh sách liên hệ hiện có hoặc khởi tạo mảng rỗng
+  let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+  contacts.push(contactData); // Thêm dữ liệu mới
+  localStorage.setItem("contacts", JSON.stringify(contacts)); // Lưu lại
+
+  // Hiển thị thông báo thành công
+  alert("Gửi thông tin liên hệ thành công!");
+
+  // Xóa nội dung form
+  fullname.value = "";
+  email_contact.value = "";
+  content_contact.value = "";
 });
 
 //check đăng nhập
