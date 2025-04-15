@@ -694,6 +694,9 @@ textarea:focus {
   .slogan-contact {
     font-size: 1rem;
   }
+  .box img {
+    width: 50%;
+  }
 }
 
 @media (max-width: 360px) {
