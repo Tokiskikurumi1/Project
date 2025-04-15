@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
   } else {
     // Nếu chưa đăng nhập, giữ nguyên giao diện mặc định
     loginTable.innerHTML = `
-          <span><a href="./login_register/login.html">Đăng nhập</a></span>
+          <span><a href="../login_register/login.html">Đăng nhập</a></span>
       `;
   }
 });
