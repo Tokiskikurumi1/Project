@@ -8,7 +8,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
     <link rel="stylesheet" href="coffees.css" />
-    <title>Liên Hệ</title>
+    <title>Chi Tiết Sản Phẩm-Coffee Shop</title>
     <style>
       a,
       span {
@@ -30,63 +30,43 @@
         <ul class="ul-bar">
           <li><a href="../index.html">Trang chủ</a></li>
           <li><a href="./introduct_web.html">Giới thiệu</a></li>
-          <li><a href="../web_children/products.html">Sản phẩm</a></li>
-          <li><a href="#">Liên hệ</a></li>
+          <li>
+            <a href="./products.html">Sản phẩm</a>
+          </li>
+          <li>
+            <a href="./contact.html">Liên hệ</a>
+          </li>
         </ul>
         <div class="search-basket">
           <a href="./cart.html"><i class="fa-solid fa-basket-shopping"></i></a>
         </div>
       </div>
     </div>
-    <!-- CONTAINER -->
-    <div class="container">
-      <div class="content slogan slogan-contact">
-        <h3>MINH COFFEE</h3>
-        <span>"Hương vị đậm đà – Kết nối mọi khoảnh khắc!"</span>
-      </div>
-      <div class="content infor-contact">
-        <span
-          ><i class="fa-solid fa-map-location-dot"></i>Địa chỉ:289 Đinh Bộ Lĩnh,
-          Phường 26, Quận Bình Thạnh, Thành phố Hồ Chí Minh </span
-        ><br />
-        <span><i class="fa-solid fa-phone-volume"></i>Hotline: 0123456789</span
-        ><br />
-        <span
-          ><i class="fa-solid fa-envelope"></i>Email: minhneahihi123@gmail.com
-        </span>
-      </div>
-      <div class="content fill-infor">
-        <h2>Liên hệ</h2>
-        <p>
-          Vui lòng điền đầy đủ thông tin theo yêu cầu để chúng tôi có thể hỗ trợ
-          quý khách tốt nhất.
-        </p>
-        <div class="text-fill">
-          <input
-            type="text"
-            name=""
-            id=""
-            placeholder="Họ và tên*"
-            class="fullname-contact"
-          />
-          <input
-            type="text"
-            name=""
-            id=""
-            placeholder="Email*"
-            class="email-contact"
-          />
-          <textarea
-            name=""
-            id=""
-            placeholder="Nội dung*"
-            class="content-contact"
-          ></textarea>
+    <!-- PRODUCT DETAIL -->
+    <div class="product-detail-container">
+      <div class="product-detail">
+        <div class="product-image">
+          <img id="product-image" src="" alt="" />
         </div>
-        <span class="btn-send">Gửi</span>
+        <div class="product-info">
+          <h1 id="product-name"></h1>
+          <div class="price" id="product-price"></div>
+          <div class="quantity-selector">
+            <button id="decrease-quantity">-</button>
+            <input type="number" id="quantity" value="1" min="1" />
+            <button id="increase-quantity">+</button>
+            <button
+              class="add-to-cart"
+              id="add-to-cart-btn"
+              style="color: black"
+            >
+              THÊM VÀO GIỎ HÀNG
+            </button>
+          </div>
+          <p id="product-description"></p>
+        </div>
       </div>
     </div>
-    <!-- FOOTER -->
     <!-- FOOTER -->
     <div id="footer">
       <h2>LIÊN HỆ</h2>
@@ -103,39 +83,17 @@
         </div>
         <div class="content-footer">
           <h2>Hỗ Trợ</h2>
-          <li>
-            <a href="">Sản phẩm</a>
-          </li>
-          <li>
-            <a href="">Giúp đỡ & Hỗ trợ</a>
-          </li>
-          <li>
-            <a href="">chính sách hoàn trả</a>
-          </li>
-          <li>
-            <a href="">điều khoản sử dụng</a>
-          </li>
-          <li>
-            <a href=""></a>
-          </li>
+          <li><a href="">Sản phẩm</a></li>
+          <li><a href="">Giúp đỡ & Hỗ trợ</a></li>
+          <li><a href="">chính sách hoàn trả</a></li>
+          <li><a href="">điều khoản sử dụng</a></li>
         </div>
         <div class="content-footer">
           <h2>Hỗ Trợ</h2>
-          <li>
-            <a href="">Sản phẩm</a>
-          </li>
-          <li>
-            <a href="">Giúp đỡ & Hỗ trợ</a>
-          </li>
-          <li>
-            <a href="">chính sách hoàn trả</a>
-          </li>
-          <li>
-            <a href="">điều khoản sử dụng</a>
-          </li>
-          <li>
-            <a href=""></a>
-          </li>
+          <li><a href="">Sản phẩm</a></li>
+          <li><a href="">Giúp đỡ & Hỗ trợ</a></li>
+          <li><a href="">chính sách hoàn trả</a></li>
+          <li><a href="">điều khoản sử dụng</a></li>
         </div>
         <div class="content-footer">
           <h2>Liên Hệ</h2>
@@ -153,7 +111,6 @@
         </div>
       </div>
     </div>
-    <!--  -->
     <div id="last"><p>Lorem ipsum dolor sit amet.</p></div>
     <script src="../cofe.js"></script>
   </body>

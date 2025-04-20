@@ -328,7 +328,8 @@ body {
 }
 
 .content-footer .social-icon i:hover {
-  background-color: red;
+  background-color: orange;
+  cursor: pointer;
 }
 
 .content-footer a {

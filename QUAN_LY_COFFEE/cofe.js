@@ -15,7 +15,7 @@ window.addEventListener("scroll", function () {
 
 // Đợi DOM tải xong
 document.addEventListener("DOMContentLoaded", () => {
-  // Hàm kiểm tra và cập nhật trạng thái đăng nhập (chạy độc lập)
+  // Hàm kiểm tra và cập nhật trạng thái đăng nhập
   function updateLoginStatus() {
     const loginTable = document.querySelector(".login-table");
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -112,6 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cartIcons.forEach((icon) => {
         icon.addEventListener("click", (e) => {
           e.preventDefault();
+          e.stopPropagation(); // Ngăn click trên icon kích hoạt link của box
           const box = icon.closest(".box");
           const productName = box.querySelector("h3").textContent;
           const price = box.querySelector(".info span").textContent;
@@ -122,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Xử lý sản phẩm (chỉ chạy trên trang có .list-food-box)
+  // Xử lý sản phẩm
   const rightListFood = document.querySelector(".list-food-box");
   if (rightListFood) {
     const typeLinks = document.querySelectorAll(".type-of-coffee li");
@@ -137,16 +138,16 @@ document.addEventListener("DOMContentLoaded", () => {
       let html = "";
 
       if (productList.length > 0) {
-        productList.forEach((product) => {
+        productList.forEach((product, index) => {
           html += `
-            <div class="box">
-              <img src="${product.image}" alt="${product.name}" />
-              <h3>${product.name}</h3>
+            <a href="detail_product.html?category=${type}&index=${index}" class="box">
+              <img src="${product.image}" alt="" />
+              <h3 style="color: black;">${product.name}</h3>
               <div class="info">
                 <span>${product.price}</span>
                 <i class="fa-solid fa-cart-plus"></i>
               </div>
-            </div>
+            </a>
           `;
         });
       } else {
@@ -192,9 +193,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const products = getProducts();
         let foundProducts = [];
         Object.keys(products).forEach((type) => {
-          const matchingProducts = products[type].filter((product) =>
-            product.name.toLowerCase().includes(keyword)
-          );
+          const matchingProducts = products[type]
+            .map((product, index) => ({ ...product, type, index }))
+            .filter((product) => product.name.toLowerCase().includes(keyword));
           foundProducts = foundProducts.concat(matchingProducts);
         });
 
@@ -202,14 +203,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (foundProducts.length > 0) {
           foundProducts.forEach((product) => {
             html += `
-              <div class="box">
+              <a href="product-detail.html?category=${product.type}&index=${product.index}" class="box">
                 <img src="${product.image}" alt="${product.name}" />
                 <h3>${product.name}</h3>
                 <div class="info">
                   <span>${product.price}</span>
                   <i class="fa-solid fa-cart-plus"></i>
                 </div>
-              </div>
+              </a>
             `;
           });
         } else {
@@ -224,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateProductList("traditional-coffee");
   }
 
-  // GỬI LIÊN HỆ (chỉ chạy trên trang có .btn-send)
+  // GỬI LIÊN HỆ
   const btnSend = document.querySelector(".btn-send");
   if (btnSend) {
     btnSend.addEventListener("click", function () {
@@ -263,5 +264,119 @@ document.addEventListener("DOMContentLoaded", () => {
       emailContact.value = "";
       contentContact.value = "";
     });
+  }
+});
+
+//
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM Loaded");
+  const urlParams = new URLSearchParams(window.location.search);
+  const category = urlParams.get("category");
+  const index = parseInt(urlParams.get("index"));
+  const products = JSON.parse(localStorage.getItem("products")) || {};
+
+  console.log("Category:", category);
+  console.log("Index:", index);
+  console.log("Products:", products);
+  console.log(
+    "Selected Product:",
+    products[category] && products[category][index]
+  );
+
+  let currentProduct = null;
+
+  if (category && products[category] && products[category][index]) {
+    const product = products[category][index];
+    currentProduct = product;
+    console.log("Product Found:", product);
+
+    // Verify DOM elements
+    const image = document.getElementById("product-image");
+    const name = document.getElementById("product-name");
+    const price = document.getElementById("product-price");
+    const description = document.getElementById("product-description");
+    console.log("DOM Elements:", {
+      image,
+      name,
+      price,
+      description,
+    });
+
+    // Update DOM
+    if (image && name && price && description) {
+      image.src = product.image || "https://via.placeholder.com/150";
+      image.alt = product.name || "Product Image";
+      name.textContent = product.name || "Unknown Product";
+      price.textContent = product.price || "N/A";
+      description.textContent =
+        product.description || "Thông tin: Sản phẩm đang được cập nhật.";
+    } else {
+      console.error("DOM elements missing!");
+      document.querySelector(".product-detail-container").innerHTML =
+        "<p class='error-message'>Lỗi: Không tìm thấy các phần tử hiển thị sản phẩm.</p>";
+      return;
+    }
+  } else {
+    console.log("Product not found");
+    document.querySelector(".product-detail-container").innerHTML =
+      "<p class='error-message'>Sản phẩm không tồn tại.</p>";
+    return;
+  }
+
+  // Quantity Selector
+  const quantityInput = document.getElementById("quantity");
+  const decreaseBtn = document.getElementById("decrease-quantity");
+  const increaseBtn = document.getElementById("increase-quantity");
+
+  decreaseBtn.addEventListener("click", () => {
+    let quantity = parseInt(quantityInput.value);
+    if (quantity > 1) {
+      quantityInput.value = quantity - 1;
+    }
+  });
+
+  increaseBtn.addEventListener("click", () => {
+    let quantity = parseInt(quantityInput.value);
+    quantityInput.value = quantity + 1;
+  });
+
+  quantityInput.addEventListener("input", () => {
+    let quantity = parseInt(quantityInput.value);
+    if (isNaN(quantity) || quantity < 1) {
+      quantityInput.value = 1;
+    }
+  });
+
+  // Attach cart event
+  const addToCartBtn = document.getElementById("add-to-cart-btn");
+  if (addToCartBtn) {
+    addToCartBtn.addEventListener("click", () => {
+      const quantity = parseInt(quantityInput.value);
+      addToCart(
+        currentProduct.name,
+        currentProduct.price,
+        currentProduct.image,
+        quantity
+      );
+    });
+  }
+
+  // Modified addToCart to handle quantity
+  let cart = JSON.parse(localStorage.getItem("list-dish")) || [];
+  function addToCart(productName, price, imageSrc, quantity) {
+    const product = {
+      name: productName,
+      price,
+      image: imageSrc,
+      quantity,
+    };
+    const existingProduct = cart.find((item) => item.name === productName);
+    if (existingProduct) {
+      existingProduct.quantity += quantity;
+    } else {
+      cart.push(product);
+    }
+    localStorage.setItem("list-dish", JSON.stringify(cart));
+    alert(`${productName} (x${quantity}) đã được thêm vào giỏ hàng!`);
   }
 });
