@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Xử lý sản phẩm
+  //HÀM LOAD SẢN PHẨM
   const rightListFood = document.querySelector(".list-food-box");
   if (rightListFood) {
     const typeLinks = document.querySelectorAll(".type-of-coffee li");

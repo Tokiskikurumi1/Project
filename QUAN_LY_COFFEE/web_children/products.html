@@ -157,31 +157,5 @@
     <!--  -->
     <div id="last"><p>Lorem ipsum dolor sit amet.</p></div>
     <script src="../cofe.js"></script>
-    <script>
-      // Load products from local storage and display them
-      function loadProducts() {
-        const productList = document.getElementById("product-list");
-        const products = JSON.parse(localStorage.getItem("products")) || [];
-
-        productList.innerHTML = ""; // Clear existing products
-
-        products.forEach((product) => {
-          const productBox = `
-            <a href="product-detail.html?product=${product.id}" class="box">
-              <img src="${product.image}" alt="${product.name}" />
-              <h3>${product.name}</h3>
-              <div class="info">
-                <span>${product.price}</span>
-                <i class="fa-solid fa-cart-plus"></i>
-              </div>
-            </a>
-          `;
-          productList.innerHTML += productBox;
-        });
-      }
-
-      // Initialize product list on page load
-      window.onload = loadProducts;
-    </script>
   </body>
 </html>
