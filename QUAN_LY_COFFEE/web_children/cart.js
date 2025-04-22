@@ -2,20 +2,6 @@
 
 // Đợi DOM tải xong
 document.addEventListener("DOMContentLoaded", () => {
-  // SEARCH
-  const searchIcon = document.querySelector("#search-icon");
-  const searchBox = document.querySelector(".search-box");
-  if (searchIcon && searchBox) {
-    searchIcon.addEventListener("click", toggleSearch);
-    searchIcon.addEventListener("touchstart", toggleSearch); // Hỗ trợ mobile
-  }
-
-  function toggleSearch(e) {
-    searchBox.classList.toggle("active");
-    ul_bar.classList.remove("active");
-    e.preventDefault(); // Ngăn hành vi mặc định trên mobile
-  }
-
   // Chạy menu
   const menu_icon = document.querySelector("#menu-icon");
   const ul_bar = document.querySelector(".ul-bar");

@@ -20,14 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginTable = document.querySelector(".login-table");
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-    console.log("Trang hiện tại:", window.location.pathname);
-    console.log("currentUser:", currentUser);
-
-    if (!loginTable) {
-      console.warn("Không tìm thấy .login-table trên trang này");
-      return;
-    }
-
     if (currentUser && currentUser.username) {
       loginTable.innerHTML = `
         <span>Chào mừng: ${currentUser.username} | <a href="#" id="logout">Đăng xuất</a></span>
@@ -76,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  //hàm đổ lọai menu
   function toggleSubMenu(e) {
     const subMenu = this.querySelector(".type-of-coffee");
     if (subMenu) {
@@ -95,13 +88,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Hàm thêm sản phẩm vào giỏ hàng
   function addToCart(productName, price, imageSrc) {
     const product = { name: productName, price, image: imageSrc, quantity: 1 };
-    const existingProduct = cart.find((item) => item.name === productName);
+    const existingProduct = cart.find((item) => item.name === productName); //kiểm tra sản phẩm đã có trong giỏ hàng hay chưa
     if (existingProduct) {
       existingProduct.quantity += 1;
     } else {
       cart.push(product);
     }
-    localStorage.setItem("list-dish", JSON.stringify(cart));
+    localStorage.setItem("list-dish", JSON.stringify(cart)); //lưu chuỗi JSON với khóa là list-dish
     alert(`${productName} đã được thêm vào giỏ hàng!`);
   }
 
@@ -157,6 +150,8 @@ document.addEventListener("DOMContentLoaded", () => {
       attachCartEvents();
     }
 
+    //Sưj kiện chọn danh mục
+
     if (typeLinks && typeLinks.length > 0) {
       typeLinks.forEach((link) => {
         link.addEventListener("click", (e) => {
@@ -176,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    // SỰ KIỆN TÌM KIẾM SẢN PHẨM
     if (searchInput && searchButton) {
       searchButton.addEventListener("click", () => {
         const keyword = searchInput.value.trim().toLowerCase();
@@ -199,13 +195,14 @@ document.addEventListener("DOMContentLoaded", () => {
           foundProducts = foundProducts.concat(matchingProducts);
         });
 
+        // category đại diện cho danh mục, index đại diện cho vị trí sản phẩm
         let html = "";
         if (foundProducts.length > 0) {
           foundProducts.forEach((product) => {
             html += `
-              <a href="product-detail.html?category=${product.type}&index=${product.index}" class="box">
+              <a href="detail_product.html?category=${product.type}&index=${product.index}" class="box"> 
                 <img src="${product.image}" alt="${product.name}" />
-                <h3>${product.name}</h3>
+                <h3 style="color: black;">${product.name}</h3>
                 <div class="info">
                   <span>${product.price}</span>
                   <i class="fa-solid fa-cart-plus"></i>
@@ -267,42 +264,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-//
+//LOAD TRANG CHI TIẾT SẢN PHẨM
+// KHỞI TẠO TRANG KHI ĐƯỢC TẢI
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM Loaded");
   const urlParams = new URLSearchParams(window.location.search);
   const category = urlParams.get("category");
   const index = parseInt(urlParams.get("index"));
   const products = JSON.parse(localStorage.getItem("products")) || {};
-
-  console.log("Category:", category);
-  console.log("Index:", index);
-  console.log("Products:", products);
-  console.log(
-    "Selected Product:",
-    products[category] && products[category][index]
-  );
-
   let currentProduct = null;
 
   if (category && products[category] && products[category][index]) {
     const product = products[category][index];
     currentProduct = product;
     console.log("Product Found:", product);
-
-    // Verify DOM elements
+    // LẤY CÁC PHẦN TỬ ĐỂ GÁN GIÁ TRỊ
     const image = document.getElementById("product-image");
     const name = document.getElementById("product-name");
     const price = document.getElementById("product-price");
     const description = document.getElementById("product-description");
-    console.log("DOM Elements:", {
-      image,
-      name,
-      price,
-      description,
-    });
 
-    // Update DOM
     if (image && name && price && description) {
       image.src = product.image || "https://via.placeholder.com/150";
       image.alt = product.name || "Product Image";
@@ -347,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Attach cart event
+  // THÊM VÀO GIỎ HÀNG
   const addToCartBtn = document.getElementById("add-to-cart-btn");
   if (addToCartBtn) {
     addToCartBtn.addEventListener("click", () => {
@@ -361,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Modified addToCart to handle quantity
+  // LƯU THÔNG TIN GIỎ HÀNG VÀO LOCAL
   let cart = JSON.parse(localStorage.getItem("list-dish")) || [];
   function addToCart(productName, price, imageSrc, quantity) {
     const product = {

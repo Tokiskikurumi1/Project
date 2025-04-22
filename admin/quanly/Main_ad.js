@@ -131,6 +131,7 @@ function displayProducts() {
   }
 }
 
+//BUTTON XÓA SẢN PHẨM
 function deleteProduct(type, index) {
   products[type].splice(index, 1);
   if (products[type].length === 0) delete products[type];
@@ -138,6 +139,7 @@ function deleteProduct(type, index) {
   displayProducts();
 }
 
+//BUTTON SỬA SẢN PHẨM
 function showEditForm(type, index) {
   const product = products[type][index];
   editingType = type;
@@ -152,6 +154,7 @@ function showEditForm(type, index) {
   document.getElementById("editForm").style.display = "block";
 }
 
+//BUTTON LƯU SỬA SẢN PHẨM
 function saveEdit() {
   const name = document.getElementById("editName").value;
   let price = document.getElementById("editPrice").value; // Lấy giá trị từ input
