@@ -45,8 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Gọi hàm đăng nhập trước
   updateLoginStatus();
-
-  // Chạy menu
+  //=================================================================================================================
+  //=================================================CHẠY MENU=======================================================
+  //=================================================================================================================
   const menu_icon = document.querySelector("#menu-icon");
   const ul_bar = document.querySelector(".ul-bar");
   if (menu_icon && ul_bar) {
@@ -59,7 +60,10 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault(); // Ngăn hành vi mặc định trên mobile
   }
 
-  // Toggle danh mục sản phẩm
+  //=================================================================================================================
+  //=================================================TOGGLE DANH MỤC SẢN PHẨM======================================
+  //=================================================================================================================
+
   const toggleItems = document.querySelectorAll(".toggle-choose-type");
   if (toggleItems) {
     toggleItems.forEach((item) => {
@@ -304,7 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Quantity Selector
+  // BUTTON TĂNG GIẢM SỐ LƯỢNG
   const quantityInput = document.getElementById("quantity");
   const decreaseBtn = document.getElementById("decrease-quantity");
   const increaseBtn = document.getElementById("increase-quantity");

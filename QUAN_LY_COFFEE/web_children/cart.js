@@ -1,5 +1,3 @@
-// cart.js
-
 // Đợi DOM tải xong
 document.addEventListener("DOMContentLoaded", () => {
   // Chạy menu
@@ -60,6 +58,7 @@ function displayCart() {
   )}VND`;
 }
 
+// HÀM CẬP NHẬT THAY ĐỔI SỐ LƯỢNG SẢN PHẨM TRONG GIỎ HÀNG
 function updateQuantity(productName, change) {
   const item = cart.find((item) => item.name === productName);
   if (item) {

@@ -186,6 +186,7 @@ function saveEdit() {
   }
 }
 
+//BUTTON HỦY
 function cancelEdit() {
   document.getElementById("overlay").style.display = "none";
   document.getElementById("editForm").style.display = "none";
@@ -197,6 +198,7 @@ function cancelEdit() {
   editingType = null;
   editingIndex = null;
 }
+
 
 function clearForm() {
   document.getElementById("productName").value = "";
