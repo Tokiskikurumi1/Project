@@ -1,23 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="customer.css" />
+    <link rel="stylesheet" href="./css/customer.css" />
+      <link rel="stylesheet" href="./css/base.css" />
+      <link rel="stylesheet" href="./css/header_sidebar.css" />
     <title>Quản lý khách hàng</title>
   </head>
   <body>
-    <div id="container">
-      <nav class="side-menu">
-        <ul class="list-menu">
-          <li><a href="../Main_Admin.html">Quản lý sản phẩm</a></li>
-          <li><a href="../quanly_hoadon/bills.html">Quản lý hóa đơn</a></li>
-          <li><a href="#">Quản lý khách hàng</a></li>
-          <li><a href="../../login_admin.html">Đăng xuất</a></li>
-        </ul>
-      </nav>
-      <div class="right">
-        <h1>Danh sách Khách hàng</h1>
+    <div class="overlay" id="overlay"></div>
+    <!--LEFT SLIDE, LẤY TỪ SLIDEBA.HTML-->
+    <div id="sidebar-placeholder"></div>
+     <div id="right-content">
+      <!--LẤY TỪ HEADER.HTML-->
+      <div id="header-placeholder"></div>
+
+      <main class="right">
 
         <!-- Danh sách khách hàng -->
         <div class="content-right">
@@ -47,5 +46,6 @@
     </div>
 
     <script src="customer.js"></script>
+    <script src="./js/header_siderbar.js"></script>
   </body>
 </html>

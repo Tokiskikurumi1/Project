@@ -1,0 +1,9 @@
+#right-content {
+  margin-left: 260px;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+main {
+  padding: 1.5rem;
+}
