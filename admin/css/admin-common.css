@@ -1,37 +1,40 @@
-body,
-h1,
-h2,
-h3,
-table,
-th,
-td,
-input,
-button {
-  font-family: "Poppins", sans-serif !important;
+/* admin-common.css - Style chung cho toàn bộ admin panel */
+
+/* Base reset & font */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-h2 {
-  color: #6b4e31;
-  font-weight: 600;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 1.8rem; /* giống Dashboard */
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f5f2eb;
+  color: #3c2f2f;
+  min-height: 100vh;
 }
 
-/* Đồng bộ với các trang trước */
+/* Main content */
 .admin-main {
-  padding: 20px;
+  padding: 24px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-.customers-card {
+/* Card chung cho tất cả trang */
+.staff-card,
+.report-card,
+.inventory-card,
+.promotion-card,
+.bills-card,
+.customers-card,
+.add-product-card,
+.product-list-card {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   padding: 24px;
+  margin-bottom: 32px;
 }
 
 h2 {
@@ -41,44 +44,66 @@ h2 {
   display: flex;
   align-items: center;
   gap: 12px;
+  font-size: 1.8rem;
 }
 
+/* Bảng chung */
 .table-container {
   overflow-x: auto;
 }
 
-.customers-table {
+table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 15px;
 }
 
-.customers-table th,
-.customers-table td {
-  padding: 14px 16px;
-  text-align: left;
-}
-
-.customers-table thead {
+thead {
   background: #8d6e63;
   color: white;
 }
 
-.customers-table th {
+th,
+td {
+  padding: 14px 16px;
+  text-align: left;
+}
+
+th {
   font-weight: 600;
 }
 
-.customers-table tbody tr {
+tbody tr {
   border-bottom: 1px solid #eee;
-  transition: 0.15s;
+  transition: background 0.15s;
 }
 
-.customers-table tbody tr:hover {
+tbody tr:hover {
   background: #fff8f5;
 }
 
-.customers-table .btn-action {
+/* Nút chung */
+.btn-primary {
+  background: #6b4e31;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: #8d6e63;
+  transform: translateY(-1px);
+}
+
+.btn-action {
   background: none;
   border: none;
   color: #6b4e31;
@@ -88,12 +113,12 @@ h2 {
   transition: 0.2s;
 }
 
-.customers-table .btn-action:hover {
+.btn-action:hover {
   color: #8d6e63;
   transform: scale(1.15);
 }
 
-/* Modal (đồng bộ với bills & dashboard) */
+/* Modal chung */
 .modal {
   position: fixed;
   inset: 0;
@@ -104,14 +129,20 @@ h2 {
   z-index: 1000;
 }
 
+.modal.active {
+  display: flex;
+}
+
 .modal-content {
   background: white;
   width: 90%;
-  max-width: 500px;
+  max-width: 600px;
   border-radius: 12px;
   padding: 28px;
   position: relative;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .close-btn {
@@ -123,11 +154,18 @@ h2 {
   color: #777;
 }
 
-.form-group {
+.modal-actions {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: flex-end;
+}
+
+/* Form chung */
+.product-form,
+.form-group {
+  display: grid;
+  gap: 16px;
 }
 
 .form-group label {
@@ -135,76 +173,46 @@ h2 {
   color: #5d4037;
 }
 
-input {
+input,
+select {
   padding: 12px 16px;
   border: 1px solid #d7ccc8;
   border-radius: 8px;
   font-size: 15px;
-  transition: all 0.2s;
 }
 
-input:focus {
+input:focus,
+select:focus {
   outline: none;
   border-color: #8d6e63;
   box-shadow: 0 0 0 3px rgba(141, 110, 99, 0.15);
 }
 
-.modal-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-  justify-content: flex-end;
-}
-
-.btn-primary {
-  background: #6b4e31;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.btn-primary:hover {
-  background: #8d6e63;
-}
-
-.btn-secondary {
-  background: #bdbdbd;
-  color: #333;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
 /* Responsive cho bảng trên mobile */
 @media (max-width: 768px) {
-  .customers-table thead {
+  table thead {
     display: none;
   }
-  .customers-table tr {
+  tr {
     display: block;
     margin-bottom: 16px;
     border: 1px solid #ddd;
     border-radius: 8px;
     background: white;
   }
-  .customers-table td {
+  td {
     display: block;
     text-align: right;
     padding: 10px;
     border-bottom: 1px solid #eee;
   }
-  .customers-table td::before {
+  td::before {
     content: attr(data-label);
     float: left;
     font-weight: bold;
     color: #6b4e31;
   }
-  .customers-table td:last-child {
+  td:last-child {
     text-align: center;
   }
 }

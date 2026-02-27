@@ -1,120 +1,194 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./css/Main_ad.css" />
-    <link rel="stylesheet" href="./css/base.css" /> 
+    <title>Admin - Quản lý Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/Dashboard.css" />
+    <link rel="stylesheet" href="./css/base.css" />
     <link rel="stylesheet" href="./css/header_sidebar.css" />
-    <title>Admin</title>
   </head>
   <body>
     <div class="overlay" id="overlay"></div>
-    <!--LEFT SLIDE, LẤY TỪ SLIDEBA.HTML-->
+
+    <!-- Sidebar placeholder -->
     <div id="sidebar-placeholder"></div>
-     <div id="right-content">
-      <!--LẤY TỪ HEADER.HTML-->
+
+    <div id="right-content">
+      <!-- Header placeholder -->
       <div id="header-placeholder"></div>
 
-      <main class="right">
+      <main class="admin-main">
         <!-- Form thêm sản phẩm -->
-        <div class="add-product-form">
-          <h3>Thêm sản phẩm mới</h3>
-          <input type="text" id="productName" placeholder="Tên món" />
-          <input
-            type="text"
-            id="productPrice"
-            placeholder="Giá (VD: 50.000VND)"
-          />
-          <input
-            type="file"
-            id="productImage"
-            accept="image/*"
-            style="display: none"
-          />
-          <button
-            type="button"
-            onclick="document.getElementById('productImage').click()"
-          >
-            Chọn ảnh
-          </button>
-          <img
-            id="previewImage"
-            src=""
-            alt="Ảnh xem trước"
-            style="display: none; width: 100px; height: 100px"
-          />
-          <input type="number" id="productStock" placeholder="Tồn kho" />
-          <select id="productType">
-            <option value="traditional-coffee">Cà phê truyền thống</option>
-            <option value="Espresso-based">Espresso-based</option>
-            <option value="cool-coffee">Cà phê lạnh & sáng tạo</option>
-            <option value="foreign-coffee">Cà phê pha phin ngoại nhập</option>
-            <option value="traditional-milk">Trà sữa truyền thống</option>
-            <option value="matcha-milk">Trà sữa matcha</option>
-            <option value="o-long-milk">Trà sữa ô long</option>
-            <option value="hongtra-milk">Trà sữa hồng trà</option>
-            <option value="fruit-smoothie">Sinh tố trái cây</option>
-            <option value="vegetable">Sinh tố rau củ</option>
-            <option value="combined-smoothie">Sinh tố kết hợp</option>
-          </select>
-          <button onclick="addProduct()">Thêm sản phẩm</button>
-        </div>
+        <section class="add-product-card">
+          <h2><i class="fas fa-coffee"></i> Thêm món mới</h2>
+          <form id="addProductForm" class="product-form">
+            <div class="form-group">
+              <label for="productName">Tên món</label>
+              <input
+                type="text"
+                id="productName"
+                placeholder="Ví dụ: Cappuccino Nóng"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="productPrice">Giá bán</label>
+              <input
+                type="text"
+                id="productPrice"
+                placeholder="50.000"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Ảnh sản phẩm</label>
+              <div class="image-upload">
+                <input type="file" id="productImage" accept="image/*" hidden />
+                <button
+                  type="button"
+                  class="btn-upload"
+                  onclick="document.getElementById('productImage').click()"
+                >
+                  <i class="fas fa-image"></i> Chọn ảnh
+                </button>
+                <img id="previewImage" src="" alt="Xem trước" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="productStock">Tồn kho</label>
+              <input
+                type="number"
+                id="productStock"
+                min="0"
+                placeholder="99"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="productType">Loại đồ uống</label>
+              <select id="productType" required>
+                <option value="" disabled selected>Chọn loại</option>
+                <option value="traditional-coffee">Cà phê truyền thống</option>
+                <option value="espresso-based">Espresso-based</option>
+                <option value="cool-coffee">Cà phê lạnh & sáng tạo</option>
+                <option value="foreign-coffee">
+                  Cà phê pha phin ngoại nhập
+                </option>
+                <option value="traditional-milk">Trà sữa truyền thống</option>
+                <option value="matcha-milk">Trà sữa matcha</option>
+                <option value="o-long-milk">Trà sữa ô long</option>
+                <option value="hongtra-milk">Trà sữa hồng trà</option>
+                <option value="fruit-smoothie">Sinh tố trái cây</option>
+                <option value="vegetable">Sinh tố rau củ</option>
+                <option value="combined-smoothie">Sinh tố kết hợp</option>
+              </select>
+            </div>
+
+            <button type="button" class="btn-primary" onclick="addProduct()">
+              <i class="fas fa-plus"></i> Thêm món
+            </button>
+          </form>
+        </section>
+
         <!-- Danh sách sản phẩm -->
-        <div class="content-right">
-          <table class="table-list" cellpadding="5" cellspacing="0" border="1">
-            <tr>
-              <th>STT</th>
-              <th>Hình ảnh</th>
-              <th>Tên món</th>
-              <th>Giá</th>
-              <th>Tồn kho</th>
-              <th>Tùy chỉnh</th>
-            </tr>
-          </table>
-        </div>
+        <section class="product-list-card">
+          <h2><i class="fas fa-list-ul"></i> Danh sách menu</h2>
+          <div class="table-container">
+            <table class="product-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Ảnh</th>
+                  <th>Tên món</th>
+                  <th>Giá</th>
+                  <th>Tồn kho</th>
+                  <th>Loại</th>
+                  <th>Tùy chỉnh</th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody">
+                <!-- JS sẽ render vào đây -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modal sửa -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="cancelEdit()">&times;</span>
+        <h2><i class="fas fa-edit"></i> Chỉnh sửa món</h2>
+        <form id="editProductForm" class="product-form">
+          <input type="hidden" id="editId" />
+
+          <div class="form-group">
+            <label for="editName">Tên món</label>
+            <input type="text" id="editName" required />
+          </div>
+
+          <div class="form-group">
+            <label for="editPrice">Giá bán</label>
+            <input type="text" id="editPrice" required />
+          </div>
+
+          <div class="form-group">
+            <label>Ảnh mới (nếu thay đổi)</label>
+            <div class="image-upload">
+              <input type="file" id="editImage" accept="image/*" hidden />
+              <button
+                type="button"
+                class="btn-upload"
+                onclick="document.getElementById('editImage').click()"
+              >
+                <i class="fas fa-image"></i> Chọn ảnh mới
+              </button>
+              <img id="editPreviewImage" src="" alt="Xem trước" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="editStock">Tồn kho</label>
+            <input type="number" id="editStock" min="0" required />
+          </div>
+
+          <div class="form-group">
+            <label for="editType">Loại</label>
+            <select id="editType" required>
+              <!-- Giống select ở trên, copy vào đây -->
+              <option value="traditional-coffee">Cà phê truyền thống</option>
+              <!-- ... copy hết các option còn lại ... -->
+            </select>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" onclick="cancelEdit()">
+              Hủy
+            </button>
+            <button type="button" class="btn-primary" onclick="saveEdit()">
+              Lưu thay đổi
+            </button>
+          </div>
+        </form>
       </div>
     </div>
-    <!-- Overlay và Form sửa sản phẩm -->
-    <div id="overlay" style="display: none"></div>
-    <div id="editForm" style="display: none">
-      <h3>Sửa sản phẩm</h3>
-      <input type="text" id="editName" placeholder="Tên món" />
-      <input type="text" id="editPrice" placeholder="Giá (VD: 50.000VND)" />
-      <input
-        type="file"
-        id="editImage"
-        accept="image/*"
-        style="display: none"
-      />
-      <button
-        type="button"
-        onclick="document.getElementById('editImage').click()"
-      >
-        Chọn ảnh mới
-      </button>
-      <img
-        id="editPreviewImage"
-        src=""
-        alt="Ảnh xem trước"
-        style="width: 100px; height: 100px"
-      />
-      <input type="number" id="editStock" placeholder="Tồn kho" />
-      <select id="editType">
-        <option value="traditional-coffee">Cà phê truyền thống</option>
-        <option value="Espresso-based">Espresso-based</option>
-        <option value="cool-coffee">Cà phê lạnh & sáng tạo</option>
-        <option value="foreign-coffee">Cà phê pha phin ngoại nhập</option>
-        <option value="traditional-milk">Trà sữa truyền thống</option>
-        <option value="matcha-milk">Trà sữa matcha</option>
-        <option value="o-long-milk">Trà sữa ô long</option>
-        <option value="hongtra-milk">Trà sữa hồng trà</option>
-        <option value="fruit-smoothie">Sinh tố trái cây</option>
-        <option value="vegetable">Sinh tố rau củ</option>
-      </select>
-      <button onclick="saveEdit()">Lưu</button>
-      <button onclick="cancelEdit()">Hủy</button>
-    </div>
+
     <script src="./js/Main_ad.js"></script>
     <script src="./js/header_siderbar.js"></script>
   </body>

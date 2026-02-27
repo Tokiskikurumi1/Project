@@ -1,0 +1,215 @@
+/* Reset & base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f5f2eb;
+  color: #3c2f2f;
+  min-height: 100vh;
+}
+
+.admin-main {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Card chung */
+.add-product-card,
+.product-list-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+h2 {
+  color: #6b4e31;
+  margin-bottom: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Form */
+.product-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #5d4037;
+}
+
+input,
+select {
+  padding: 12px 16px;
+  border: 1px solid #d7ccc8;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #8d6e63;
+  box-shadow: 0 0 0 3px rgba(141, 110, 99, 0.15);
+}
+
+/* Upload ảnh */
+.image-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-upload {
+  padding: 10px 16px;
+  background: #a1887f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-upload:hover {
+  background: #8d6e63;
+}
+
+#previewImage,
+#editPreviewImage {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px dashed #bcaaa4;
+  display: none;
+}
+
+/* Button chính */
+.btn-primary {
+  background: #6b4e31;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: #8d6e63;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #bdbdbd;
+  color: #333;
+}
+
+/* Bảng */
+.table-container {
+  overflow-x: auto;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 15px;
+}
+
+.product-table th,
+.product-table td {
+  padding: 14px 16px;
+  text-align: left;
+}
+
+.product-table thead {
+  background: #8d6e63;
+  color: white;
+}
+
+.product-table th {
+  font-weight: 600;
+}
+
+.product-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: 0.15s;
+}
+
+.product-table tbody tr:hover {
+  background: #fff8f5;
+}
+
+.product-table img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 12px;
+  padding: 28px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #777;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-form {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,61 +1,91 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Quản lý Hóa đơn</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
     <link rel="stylesheet" href="./css/bills.css" />
-      <link rel="stylesheet" href="./css/base.css" />
-      <link rel="stylesheet" href="./css/header_sidebar.css" />
-    <title>Quản lý hóa đơn</title>
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/header_sidebar.css" />
   </head>
   <body>
     <div class="overlay" id="overlay"></div>
-    <!--LEFT SLIDE, LẤY TỪ SLIDEBA.HTML-->
+
+    <!-- Sidebar placeholder (đã có sidebar đẹp từ trước) -->
     <div id="sidebar-placeholder"></div>
-     <div id="right-content">
-      <!--LẤY TỪ HEADER.HTML-->
+
+    <div id="right-content">
+      <!-- Header placeholder -->
       <div id="header-placeholder"></div>
 
-      <main class="right">
-        <!-- Danh sách hóa đơn -->
-        <div class="content-right">
-          <table class="table-list" cellpadding="5" cellspacing="0" border="1">
+      <main class="admin-main">
+        <section class="bills-card">
+          <h2><i class="fas fa-receipt"></i> Quản lý hóa đơn</h2>
+          <div class="table-container">
+            <table class="bills-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Mã hóa đơn</th>
+                  <th>Ngày lập</th>
+                  <th>Tổng tiền</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="bill-list">
+                <!-- JS render bills vào đây -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modal Xem chi tiết hóa đơn -->
+    <div id="billDetailModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="hideBillDetailForm()">&times;</span>
+        <h2>
+          <i class="fas fa-file-invoice-dollar"></i> Chi tiết hóa đơn #<span
+            id="detailBillId"
+          ></span>
+        </h2>
+
+        <div class="bill-info">
+          <p><strong>Ngày lập:</strong> <span id="detailDate"></span></p>
+          <p><strong>Khách hàng:</strong> <span id="detailCustomer"></span></p>
+          <p><strong>SĐT:</strong> <span id="detailPhone"></span></p>
+          <p><strong>Tổng tiền:</strong> <span id="detailTotal"></span></p>
+        </div>
+
+        <table class="detail-table">
+          <thead>
             <tr>
-              <th>STT</th>
-              <th>Mã hóa đơn</th>
-              <th>Ngày lập</th>
-              <th>Xem chi tiết</th>
-              <th>Tùy chỉnh</th>
+              <th>Tên sản phẩm</th>
+              <th>Giá</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
             </tr>
-            <tbody id="bill-list"></tbody>
-          </table>
+          </thead>
+          <tbody id="billDetailItems"></tbody>
+        </table>
+
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="hideBillDetailForm()">
+            Đóng
+          </button>
         </div>
       </div>
-    </div>
-
-    <!-- Form sửa hóa đơn (ẩn mặc định) -->
-    <div id="editBillForm" style="display: none">
-      <h3>Sửa thông tin khách hàng</h3>
-      <input type="text" id="editName" placeholder="Tên khách hàng" />
-      <input type="tel" id="editPhone" placeholder="Số điện thoại" />
-      <input type="text" id="editAddress" placeholder="Địa chỉ" />
-      <button onclick="saveEditBill()">Lưu</button>
-      <button onclick="cancelEditBill()">Hủy</button>
-    </div>
-
-    <!-- Form xem chi tiết hóa đơn (ẩn mặc định) -->
-    <div id="billDetailForm" style="display: none">
-      <h3>Chi tiết hóa đơn</h3>
-      <table id="billDetailTable" cellpadding="5" cellspacing="0" border="1">
-        <tr>
-          <th>Hình ảnh</th>
-          <th>Tên sản phẩm</th>
-          <th>Số lượng</th>
-        </tr>
-        <tbody id="billDetailItems"></tbody>
-      </table>
-      <p id="billTotal" style="text-align: right; margin-top: 10px"></p>
-      <button onclick="hideBillDetailForm()">Đóng</button>
     </div>
 
     <script src="./js/bills.js"></script>

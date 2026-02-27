@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Quản lý Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/header_sidebar.css" />
+    <link rel="stylesheet" href="./css/admin-common.css" />
+  </head>
+  <body>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Sidebar placeholder -->
+    <div id="sidebar-placeholder"></div>
+
+    <div id="right-content">
+      <!-- Header placeholder -->
+      <div id="header-placeholder"></div>
+
+      <!-- staff.html -->
+      <main class="admin-main">
+        <section class="staff-card">
+          <h2><i class="fas fa-user-tie"></i> Quản lý nhân viên</h2>
+
+          <!-- Nút thêm nhân viên -->
+          <button class="btn-primary" onclick="showAddStaffModal()">
+            <i class="fas fa-plus"></i> Thêm nhân viên
+          </button>
+
+          <div class="table-container">
+            <table class="staff-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Tên nhân viên</th>
+                  <th>SĐT</th>
+                  <th>Chức vụ</th>
+                  <th>Ca làm việc</th>
+                  <th>Lương cơ bản</th>
+                  <th>Trạng thái</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="staff-list">
+                <!-- JS render -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+
+      <!-- Modal thêm/sửa nhân viên -->
+      <div id="staffModal" class="modal">
+        <div class="modal-content">
+          <span class="close-btn" onclick="closeStaffModal()">&times;</span>
+          <h2><i class="fas fa-user-plus"></i> Thêm / Sửa nhân viên</h2>
+          <form class="product-form">
+            <div class="form-group">
+              <label>Tên nhân viên</label>
+              <input type="text" id="staffName" required />
+            </div>
+            <div class="form-group">
+              <label>SĐT</label>
+              <input type="tel" id="staffPhone" required />
+            </div>
+            <div class="form-group">
+              <label>Chức vụ</label>
+              <select id="staffRole">
+                <option value="Phục vụ">Phục vụ</option>
+                <option value="Pha chế">Pha chế</option>
+                <option value="Thu ngân">Thu ngân</option>
+                <option value="Quản lý">Quản lý</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Ca làm việc</label>
+              <input type="text" id="staffShift" placeholder="Sáng/Chiều/Tối" />
+            </div>
+            <div class="form-group">
+              <label>Lương cơ bản (VND)</label>
+              <input type="number" id="staffSalary" />
+            </div>
+            <div class="modal-actions">
+              <button
+                type="button"
+                class="btn-secondary"
+                onclick="closeStaffModal()"
+              >
+                Hủy
+              </button>
+              <button type="button" class="btn-primary" onclick="saveStaff()">
+                Lưu
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="./js/Main_ad.js"></script>
+    <script src="./js/header_siderbar.js"></script>
+  </body>
+</html>

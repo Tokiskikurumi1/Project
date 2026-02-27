@@ -1,51 +1,107 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Quản lý Khách hàng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    
     <link rel="stylesheet" href="./css/customer.css" />
-      <link rel="stylesheet" href="./css/base.css" />
-      <link rel="stylesheet" href="./css/header_sidebar.css" />
-    <title>Quản lý khách hàng</title>
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/header_sidebar.css" />
   </head>
   <body>
     <div class="overlay" id="overlay"></div>
-    <!--LEFT SLIDE, LẤY TỪ SLIDEBA.HTML-->
+
+    <!-- Sidebar placeholder -->
     <div id="sidebar-placeholder"></div>
-     <div id="right-content">
-      <!--LẤY TỪ HEADER.HTML-->
+
+    <div id="right-content">
+      <!-- Header placeholder -->
       <div id="header-placeholder"></div>
 
-      <main class="right">
+      <main class="admin-main">
+        <section class="customers-card">
+          <h2><i class="fas fa-users"></i> Quản lý khách hàng</h2>
+          <div class="table-container">
+            <table class="customers-table">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Tên khách hàng</th>
+                  <th>Số điện thoại</th>
+                  <th>Địa chỉ</th>
+                  <th>Mã hóa đơn liên quan</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="customer-list">
+                <!-- JS render customers vào đây -->
+                <!-- Nếu chưa có: hiển thị thông báo -->
+                <tr>
+                  <td
+                    colspan="6"
+                    style="text-align: center; padding: 40px; color: #8d6e63"
+                  >
+                    Chưa có khách hàng nào
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
 
-        <!-- Danh sách khách hàng -->
-        <div class="content-right">
-          <table class="table-list" cellpadding="5" cellspacing="0" border="1">
-            <tr>
-              <th>STT</th>
-              <th>Tên khách hàng</th>
-              <th>Số điện thoại</th>
-              <th>Địa chỉ</th>
-              <th>Mã hóa đơn</th>
-              <th>Tùy chỉnh</th>
-            </tr>
-            <tbody id="customer-list"></tbody>
-          </table>
-        </div>
+    <!-- Modal Sửa thông tin khách hàng -->
+    <div id="editCustomerModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="cancelEditCustomer()">&times;</span>
+        <h2><i class="fas fa-user-edit"></i> Sửa thông tin khách hàng</h2>
+        <form class="product-form">
+          <input type="hidden" id="editCustomerId" />
+          <div class="form-group">
+            <label for="editName">Tên khách hàng</label>
+            <input type="text" id="editName" required />
+          </div>
+          <div class="form-group">
+            <label for="editPhone">Số điện thoại</label>
+            <input type="tel" id="editPhone" required />
+          </div>
+          <div class="form-group">
+            <label for="editAddress">Địa chỉ</label>
+            <input type="text" id="editAddress" />
+          </div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn-secondary"
+              onclick="cancelEditCustomer()"
+            >
+              Hủy
+            </button>
+            <button
+              type="button"
+              class="btn-primary"
+              onclick="saveEditCustomer()"
+            >
+              Lưu thay đổi
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
-    <!-- Form sửa khách hàng (ẩn mặc định) -->
-    <div id="editCustomerForm" style="display: none">
-      <h3>Sửa thông tin khách hàng</h3>
-      <input type="text" id="editName" placeholder="Tên khách hàng" />
-      <input type="tel" id="editPhone" placeholder="Số điện thoại" />
-      <input type="text" id="editAddress" placeholder="Địa chỉ" />
-      <button onclick="saveEditCustomer()">Lưu</button>
-      <button onclick="cancelEditCustomer()">Hủy</button>
-    </div>
-
-    <script src="customer.js"></script>
+    <script src="./js/customer.js"></script>
     <script src="./js/header_siderbar.js"></script>
   </body>
 </html>
