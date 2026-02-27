@@ -117,7 +117,7 @@ signInBtn.addEventListener("click", function (e) {
 
   // Kiểm tra thông tin đăng nhập
   const user = users.find(
-    (user) => user.email === email && user.password === password
+    (user) => user.email === email && user.password === password,
   );
 
   if (user) {
@@ -125,7 +125,7 @@ signInBtn.addEventListener("click", function (e) {
     localStorage.setItem("currentUser", JSON.stringify(user));
     alert(`Đăng nhập thành công! Chào mừng ${user.username}`);
     loginForm.reset();
-    window.location.href = "../index.html";
+    window.location.href = "../../index.html";
   } else {
     alert("Email hoặc mật khẩu không đúng!");
   }

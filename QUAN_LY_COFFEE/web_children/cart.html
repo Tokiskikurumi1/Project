@@ -7,7 +7,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
-    <link rel="stylesheet" href="coffees.css" />
+    <link rel="stylesheet" href="./css/coffees.css" />
     <title>Giỏ hàng</title>
     <style>
       a,
@@ -19,33 +19,13 @@
   </head>
   <body>
     <!-- HEADER -->
-    <div id="header">
-      <div class="login-table">
-        <span><a href="../login_register/login.html">Đăng nhập</a></span>
-      </div>
-      <div class="tabbar-control">
-        <a href="../index.html" class="logo"
-          ><img src="../HomepageImage/logo.png" alt=""
-        /></a>
-        <i class="fa-solid fa-bars" id="menu-icon"></i>
-        <ul class="ul-bar">
-          <li><a href="../index.html">Trang chủ</a></li>
-          <li><a href="./introduct_web.html">Giới thiệu</a></li>
-          <li><a href="./products.html">Sản phẩm</a></li>
-          <li><a href="./contact.html">Liên hệ</a></li>
-        </ul>
-        <div class="search-basket">
-          <a href="#"><i class="fa-solid fa-basket-shopping"></i></a>
-          <!-- <i id="search-icon" class="fa-solid fa-magnifying-glass"></i> -->
-        </div>
-        <!-- <div class="search-box">
-          <input type="search" placeholder="Nhập sản phẩm tìm kiếm" />
-        </div> -->
+    <div id="main-header">
+      
       </div>
     </div>
     <!-- CONTAINER -->
     <div id="container">
-      <h1>GIỎ HÀNG</h1>
+      <h1 style="margin: 0;">GIỎ HÀNG</h1>
       <div class="infor-cart">
         <div class="left-infor-cart">
           <table class="table-infor-cart">
@@ -78,6 +58,8 @@
       <button onclick="processCheckout()">Xác nhận</button>
       <button onclick="hideCheckoutForm()">Hủy</button>
     </div>
+    <div id="main-footer"></div>
+    <script src="./js/header.js"></script>
     <script src="cart.js"></script>
     <script src="../cofe.js"></script>
   </body>

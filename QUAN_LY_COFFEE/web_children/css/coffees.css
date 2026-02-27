@@ -274,7 +274,7 @@ body {
 /* CONTENT SLOGAN PRODUCT */
 .content.slogan.products {
   padding: 50px 100px;
-  background: url("../image/background-woods.jpg");
+  background: url("../../image/backgournd_wood.avif");
 }
 
 .content.slogan.products h1 {
@@ -730,9 +730,9 @@ textarea:focus {
 }
 /* Media Queries */
 @media (max-width: 1058px) {
-  header {
+  /* header {
     padding: 16px 60px;
-  }
+  } */
   .content {
     padding: 50px 60px;
   }
@@ -745,9 +745,9 @@ textarea:focus {
 }
 
 @media (max-width: 991px) {
-  header {
+  /* header {
     padding: 16px 4%;
-  }
+  } */
   .content {
     padding: 50px 4%;
   }
@@ -763,9 +763,9 @@ textarea:focus {
 }
 
 @media (max-width: 768px) {
-  header {
+  /* header {
     padding: 12px 4%;
-  }
+  } */
   #menu-icon {
     display: initial;
   }
@@ -846,9 +846,9 @@ textarea:focus {
     padding: 20px 20px;
   }
 
-  header {
+  /* header {
     padding: 11px 4%;
-  }
+  } */
   .login img {
     width: 45px;
   }
@@ -873,3 +873,4 @@ textarea:focus {
     grid-template-columns: 1fr; /* Chỉ có 1 cột */
   }
 }
+
