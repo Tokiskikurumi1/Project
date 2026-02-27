@@ -872,5 +872,7 @@ textarea:focus {
   .list-food {
     grid-template-columns: 1fr; /* Chỉ có 1 cột */
   }
+  .left-list-food {
+    min-height: auto;
+  }
 }
-
