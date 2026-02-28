@@ -18,17 +18,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // Hàm kiểm tra và cập nhật trạng thái đăng nhập
   function updateLoginStatus() {
     const loginTable = document.querySelector(".login-table");
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const currentUser = localStorage.getItem("user");
 
-    if (currentUser && currentUser.username) {
+    if (currentUser) {
       loginTable.innerHTML = `
-        <span>Chào mừng: ${currentUser.username} | <a href="#" id="logout">Đăng xuất</a></span>
-      `;
+    <span>Chào mừng: ${currentUser} | <a href="#" id="logout">Đăng xuất</a></span>
+  `;
       const logoutButton = document.getElementById("logout");
       if (logoutButton) {
         logoutButton.addEventListener("click", function (e) {
           e.preventDefault();
-          localStorage.removeItem("currentUser");
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("role");
+          localStorage.removeItem("user");
           window.location.reload();
         });
       }

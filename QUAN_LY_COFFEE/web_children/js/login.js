@@ -1,3 +1,5 @@
+const API_BASE = "https://localhost:7161/api";
+
 // login.js
 const loginForm = document.querySelector(".login-form");
 const registerForm = document.querySelector(".register-form");
@@ -6,6 +8,9 @@ const loginTitle = document.querySelector(".title-login");
 const registerTitle = document.querySelector(".title-register");
 const signUpBtn = document.querySelector("#SignUpBtn");
 const signInBtn = document.querySelector("#SignInBtn");
+
+const accountInput = document.querySelector("#log-account");
+const passInput = document.querySelector("#log-pass");
 
 // Hàm kiểm tra định dạng email
 function isValidEmail(email) {
@@ -38,95 +43,100 @@ function registerFunction() {
 }
 
 // Xử lý đăng ký
-signUpBtn.addEventListener("click", function (e) {
+signUpBtn.addEventListener("click", async function (e) {
   e.preventDefault();
 
-  const username = document.querySelector("#reg-name").value;
-  const email = document.querySelector("#reg-email").value;
-  const password = document.querySelector("#reg-pass").value;
+  const fullName = document.querySelector("#reg-name").value.trim();
+  const email = document.querySelector("#reg-email").value.trim();
+  const username = document.querySelector("#reg-account").value.trim();
+  const password = document.querySelector("#reg-pass").value.trim();
   const agree = document.querySelector("#agree").checked;
 
-  // Kiểm tra các trường bắt buộc
-  if (!username || !email || !password) {
+  if (!fullName || !email || !username || !password) {
     alert("Vui lòng điền đầy đủ thông tin!");
     return;
   }
 
-  // Kiểm tra định dạng email
   if (!isValidEmail(email)) {
-    alert("Vui lòng nhập email hợp lệ!");
+    alert("Email không hợp lệ!");
     return;
   }
 
-  // Kiểm tra checkbox terms & conditions
   if (!agree) {
-    alert("Vui lòng đồng ý với các điều khoản và điều kiện!");
+    alert("Vui lòng đồng ý điều khoản!");
     return;
   }
 
-  // Lấy danh sách users từ localStorage
-  let users = JSON.parse(localStorage.getItem("users")) || [];
+  try {
+    const res = await fetch(`${API_BASE}/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Username: username,
+        PasswordHash: password,
+        FullName: fullName,
+        Email: email,
+      }),
+    });
 
-  // Kiểm tra email đã tồn tại
-  if (users.some((user) => user.email === email)) {
-    alert("Email đã được đăng ký!");
-    return;
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message);
+      return;
+    }
+
+    alert(data.message || "Đăng ký thành công!");
+
+    registerForm.reset();
+    loginFunction();
+  } catch (err) {
+    console.error(err);
+    alert("Không kết nối được server");
   }
-
-  // Tạo object user mới
-  const newUser = {
-    username: username,
-    email: email,
-    password: password,
-  };
-
-  // Thêm user mới vào danh sách
-  users.push(newUser);
-
-  // Lưu vào localStorage
-  localStorage.setItem("users", JSON.stringify(users));
-
-  alert("Đăng ký thành công! Vui lòng đăng nhập.");
-
-  // Reset form và chuyển sang form login
-  registerForm.reset();
-  loginFunction();
 });
 
-// Xử lý đăng nhập
-signInBtn.addEventListener("click", function (e) {
-  e.preventDefault();
+// ĐĂNG NHẬP
+signInBtn.addEventListener("click", async () => {
+  const account = accountInput.value.trim();
+  const pass = passInput.value.trim();
 
-  const email = document.querySelector("#log-email").value;
-  const password = document.querySelector("#log-pass").value;
-
-  // Kiểm tra các trường bắt buộc
-  if (!email || !password) {
-    alert("Vui lòng điền đầy đủ thông tin!");
+  if (!account || !pass) {
+    alert("Vui lòng nhập tài khoản và mật khẩu");
     return;
   }
 
-  // Kiểm tra định dạng email
-  if (!isValidEmail(email)) {
-    alert("Vui lòng nhập email hợp lệ!");
-    return;
-  }
+  try {
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Username: account,
+        PasswordHash: pass,
+      }),
+    });
 
-  // Lấy danh sách users từ localStorage
-  let users = JSON.parse(localStorage.getItem("users")) || [];
+    if (!res.ok) {
+      const err = await res.text();
+      console.log(err);
+      alert("Sai tài khoản hoặc mật khẩu");
+      return;
+    }
 
-  // Kiểm tra thông tin đăng nhập
-  const user = users.find(
-    (user) => user.email === email && user.password === password,
-  );
+    const data = await res.json();
 
-  if (user) {
-    // Lưu thông tin user đã đăng nhập vào localStorage
-    localStorage.setItem("currentUser", JSON.stringify(user));
-    alert(`Đăng nhập thành công! Chào mừng ${user.username}`);
-    loginForm.reset();
+    localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("role", data.role);
+    localStorage.setItem("user", data.user);
+
+    alert("Đăng nhập thành công");
     window.location.href = "../../index.html";
-  } else {
-    alert("Email hoặc mật khẩu không đúng!");
+  } catch (err) {
+    console.error(err);
+    alert("Không kết nối được server");
   }
 });
