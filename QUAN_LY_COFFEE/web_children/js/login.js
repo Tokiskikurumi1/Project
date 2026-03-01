@@ -24,9 +24,9 @@ function loginFunction() {
   registerForm.style.left = "150%";
   registerForm.style.opacity = 0;
   wrapper.style.height = "500px";
-  loginTitle.style.top = "50%";
+  loginTitle.style.top = "40%";
   loginTitle.style.opacity = 1;
-  registerTitle.style.top = "50px";
+  registerTitle.style.top = "75px";
   registerTitle.style.opacity = 0;
 }
 
@@ -35,10 +35,10 @@ function registerFunction() {
   loginForm.style.opacity = 0;
   registerForm.style.left = "50%";
   registerForm.style.opacity = 1;
-  wrapper.style.height = "580px";
+  wrapper.style.height = "600px";
   loginTitle.style.top = "-60px";
   loginTitle.style.opacity = 0;
-  registerTitle.style.top = "50%";
+  registerTitle.style.top = "40%";
   registerTitle.style.opacity = 1;
 }
 
