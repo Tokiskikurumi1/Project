@@ -7,46 +7,30 @@ const searchInput = document.querySelector(
 );
 const searchButton = document.querySelector(".right-list-food span");
 
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const currentPageEl = document.getElementById("currentPage");
+
 let allProducts = [];
 let allCategories = [];
 let currentCategory = null;
+
+let currentPage = 1;
+const itemsPerPage = 6;
 
 // ========================== LOAD CATEGORY ==========================
 async function loadCategory() {
   try {
     const res = await fetch(`${API_BASE}/LoadCoffee/load-category`);
-
-    console.log("Status:", res.status);
-
-    if (!res.ok) {
-      const errText = await res.text();
-      console.log("Error text:", errText);
-      throw new Error("Lỗi load category");
-    }
+    if (!res.ok) throw new Error("Lỗi load category");
 
     allCategories = await res.json();
-    console.log("Category data:", allCategories);
-
     renderCategory();
   } catch (err) {
     console.error("Load category lỗi:", err);
   }
 }
 
-async function loadAllProducts() {
-  try {
-    const res = await fetch(`${API_BASE}/LoadCoffee/get-all`);
-    if (!res.ok) throw new Error("Lỗi load sản phẩm");
-
-    allProducts = await res.json();
-
-    console.log("Products:", allProducts);
-
-    renderProducts();
-  } catch (err) {
-    console.error("Lỗi load sản phẩm:", err);
-  }
-}
 // ========================== LOAD PRODUCT ==========================
 async function loadProducts() {
   try {
@@ -56,7 +40,7 @@ async function loadProducts() {
     allProducts = await res.json();
     renderProducts();
   } catch (err) {
-    console.error(err);
+    console.error("Lỗi load sản phẩm:", err);
   }
 }
 
@@ -64,20 +48,21 @@ async function loadProducts() {
 function renderCategory() {
   categoryListEl.innerHTML = "";
 
-  // ====== NÚT ALL ======
+  // ===== NÚT ALL =====
   const allLi = document.createElement("li");
   allLi.textContent = "Tất cả";
   allLi.style.cursor = "pointer";
   allLi.style.fontWeight = "bold";
 
   allLi.addEventListener("click", () => {
-    currentCategory = null; // null = không filter
+    currentCategory = null;
+    currentPage = 1;
     renderProducts();
   });
 
   categoryListEl.appendChild(allLi);
 
-  // ====== CATEGORY TỪ DATABASE ======
+  // ===== CATEGORY TỪ DB =====
   allCategories.forEach((cate) => {
     const li = document.createElement("li");
     li.textContent = cate.categoryName;
@@ -85,6 +70,7 @@ function renderCategory() {
 
     li.addEventListener("click", () => {
       currentCategory = cate.categoryID;
+      currentPage = 1;
       renderProducts();
     });
 
@@ -98,12 +84,12 @@ function renderProducts() {
 
   let filtered = [...allProducts];
 
-  // FILTER THEO CATEGORY
+  // ===== FILTER CATEGORY =====
   if (currentCategory !== null) {
     filtered = filtered.filter((p) => p.categoryID === currentCategory);
   }
 
-  // SEARCH THEO TÊN
+  // ===== SEARCH =====
   const keyword = searchInput.value.trim().toLowerCase();
   if (keyword) {
     filtered = filtered.filter((p) =>
@@ -111,12 +97,23 @@ function renderProducts() {
     );
   }
 
-  if (filtered.length === 0) {
+  // ===== PAGINATION =====
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+
+  if (currentPage > totalPages) currentPage = 1;
+
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const paginatedItems = filtered.slice(start, end);
+
+  if (paginatedItems.length === 0) {
     productListEl.innerHTML = "<p>Không có sản phẩm nào</p>";
+    renderPagination(0);
     return;
   }
 
-  filtered.forEach((product) => {
+  // ===== RENDER PRODUCT =====
+  paginatedItems.forEach((product) => {
     const div = document.createElement("a");
     div.href = "#";
     div.className = "box";
@@ -133,8 +130,38 @@ function renderProducts() {
     productListEl.appendChild(div);
   });
 
+  renderPagination(totalPages);
   attachCartEvents();
 }
+
+// ========================== RENDER PAGINATION ==========================
+function renderPagination(totalPages) {
+  if (totalPages === 0) {
+    currentPageEl.textContent = "0 / 0";
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    return;
+  }
+
+  currentPageEl.textContent = `${currentPage} / ${totalPages}`;
+  prevBtn.disabled = currentPage === 1;
+  nextBtn.disabled = currentPage === totalPages;
+}
+
+// ========================== PAGINATION EVENT ==========================
+prevBtn.addEventListener("click", () => {
+  if (currentPage > 1) {
+    currentPage--;
+    renderProducts();
+  }
+});
+
+nextBtn.addEventListener("click", () => {
+  if (!nextBtn.disabled) {
+    currentPage++;
+    renderProducts();
+  }
+});
 
 // ========================== FORMAT PRICE ==========================
 function formatPrice(price) {
@@ -162,11 +189,13 @@ function attachCartEvents() {
 
 // ========================== SEARCH EVENT ==========================
 searchButton.addEventListener("click", () => {
+  currentPage = 1;
   renderProducts();
 });
 
 searchInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
+    currentPage = 1;
     renderProducts();
   }
 });

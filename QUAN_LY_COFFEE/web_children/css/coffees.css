@@ -346,6 +346,8 @@ body {
 }
 
 .right-list-food {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   background-color: white;
   border-radius: 1rem;
@@ -415,6 +417,32 @@ body {
 
 .right-list-food .list-food-box .box .info i:hover {
   background-color: orange;
+}
+
+#pagination {
+  margin-top: auto; /* đẩy xuống đáy */
+  text-align: center;
+  padding-top: 20px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  margin: 0 10px;
+  cursor: pointer;
+  border: none;
+  background: #333;
+  color: white;
+  border-radius: 4px;
+}
+
+.pagination button:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-weight: bold;
+  color: black;
 }
 
 /* ======================================================================================================================================== */
