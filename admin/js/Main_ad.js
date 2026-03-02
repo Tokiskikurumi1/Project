@@ -1,207 +1,332 @@
-// products lưu dạng { type: [ {id, name, price, image (base64), stock} ] }
-let products = JSON.parse(localStorage.getItem("products")) || {};
-let editingType = null;
-let editingIndex = null;
+// ================= API =================
+const API_BASE = "https://localhost:7114/api/ManageProduct";
 
-// Format giá: chỉ số + "VND", dấu chấm phân cách
+let categories = [];
+let products = [];
+
+// ================= FORMAT GIÁ =================
 function formatPrice(value) {
   let num = value.replace(/[^\d]/g, "");
   if (!num) return "";
-  return parseInt(num).toLocaleString("vi-VN") + "VND";
+  return parseInt(num).toLocaleString("vi-VN") + " VND";
 }
 
-// Xử lý input giá realtime
 function handlePriceInput(input) {
   input.addEventListener("input", (e) => {
     const raw = e.target.value.replace(/[^\d]/g, "");
     e.target.value = raw ? formatPrice(raw) : "";
   });
+
   input.addEventListener("blur", (e) => {
     const raw = e.target.value.replace(/[^\d]/g, "");
     e.target.value = raw ? formatPrice(raw) : "";
   });
 }
 
-// Preview ảnh khi chọn file
+// ================= PREVIEW ẢNH =================
 function setupImagePreview(inputId, previewId) {
   const input = document.getElementById(inputId);
   const preview = document.getElementById(previewId);
+
   if (!input || !preview) return;
 
   input.addEventListener("change", () => {
     const file = input.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        preview.src = e.target.result;
-        preview.style.display = "block";
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      preview.src = e.target.result;
+      preview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
   });
 }
 
+// ================= INIT =================
 document.addEventListener("DOMContentLoaded", () => {
-  displayProducts();
-
-  // Setup preview cho form add
   setupImagePreview("productImage", "previewImage");
-
-  // Setup preview cho form edit
   setupImagePreview("editImage", "editPreviewImage");
 
-  // Format giá cho cả 2 input
   handlePriceInput(document.getElementById("productPrice"));
   handlePriceInput(document.getElementById("editPrice"));
+
+  loadCategories();
+  loadProducts();
 });
 
-// Thêm sản phẩm mới
-function addProduct() {
-  const name = document.getElementById("productName").value.trim();
-  const priceStr = document.getElementById("productPrice").value;
-  const stock = parseInt(document.getElementById("productStock").value);
-  const type = document.getElementById("productType").value;
-  const file = document.getElementById("productImage").files[0];
-  const image = file ? document.getElementById("previewImage").src : "";
+// ================= LOAD CATEGORY =================
+async function loadCategories() {
+  try {
+    const res = await fetch(`${API_BASE}/load-category`);
+    if (!res.ok) throw new Error();
 
-  const price = priceStr ? formatPrice(priceStr) : "";
+    categories = await res.json();
 
-  if (!name || !price || !image || isNaN(stock) || !type) {
-    alert("Vui lòng điền đầy đủ thông tin và chọn ảnh!");
+    const addSelect = document.getElementById("productType");
+    const editSelect = document.getElementById("editType");
+
+    addSelect.innerHTML = `<option value="" disabled selected>Chọn loại</option>`;
+    editSelect.innerHTML = "";
+
+    categories.forEach((c) => {
+      addSelect.innerHTML += `<option value="${c.categoryID}">${c.categoryName}</option>`;
+
+      editSelect.innerHTML += `<option value="${c.categoryID}">${c.categoryName}</option>`;
+    });
+  } catch {
+    alert("Không load được category!");
+  }
+}
+
+// ================= LOAD PRODUCT =================
+async function loadProducts() {
+  try {
+    const res = await fetch(`${API_BASE}/load-product`);
+    if (!res.ok) throw new Error();
+
+    products = await res.json();
+    renderProducts();
+  } catch {
+    alert("Không load được sản phẩm!");
+  }
+}
+
+// ================= RENDER TABLE =================
+function renderProducts() {
+  const tbody = document.getElementById("productTableBody");
+  tbody.innerHTML = "";
+
+  if (!products || products.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center;padding:40px;">
+          Chưa có sản phẩm
+        </td>
+      </tr>
+    `;
     return;
   }
 
-  if (!products[type]) products[type] = [];
-  products[type].push({ name, price, image, stock });
+  products.forEach((p, index) => {
+    const category = categories.find((c) => c.categoryID === p.categoryID);
 
-  localStorage.setItem("products", JSON.stringify(products));
-  displayProducts();
-  clearAddForm();
+    const categoryName = category ? category.categoryName : "Không rõ";
+
+    const statusText =
+      p.status === 1
+        ? `<span style="color:green;font-weight:600">Đang phục vụ</span>`
+        : `<span style="color:red;font-weight:600">Ngưng phục vụ</span>`;
+
+    const lockIcon =
+      p.status === 1
+        ? `<i class="fas fa-lock-open"></i>`
+        : `<i class="fas fa-lock"></i>`;
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>
+        <img src="${p.imageURL}"
+        style="width:60px;height:60px;object-fit:cover;border-radius:6px;">
+      </td>
+      <td>${p.coffeeName}</td>
+      <td>${p.price.toLocaleString("vi-VN")} VND</td>
+      <td>${categoryName}</td>
+      <td>${statusText}</td>
+      <td>
+        <button onclick="showEditForm(${p.coffeeID})">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button onclick="deleteProduct(${p.coffeeID})">
+          <i class="fas fa-trash"></i>
+        </button>
+        <button onclick="lockProduct(${p.coffeeID})">
+          ${lockIcon}
+        </button>
+      </td>
+    `;
+
+    tbody.appendChild(row);
+  });
 }
 
-// Xóa form add sau khi thêm
+// ================= ADD PRODUCT =================
+async function addProduct() {
+  const name = document.getElementById("productName").value.trim();
+  const priceStr = document.getElementById("productPrice").value;
+  const categoryID = parseInt(document.getElementById("productType").value);
+  const file = document.getElementById("productImage").files[0];
+
+  if (!name || !priceStr || !categoryID || !file) {
+    alert("Vui lòng nhập đầy đủ thông tin!");
+    return;
+  }
+
+  const price = parseInt(priceStr.replace(/[^\d]/g, ""));
+
+  const reader = new FileReader();
+  reader.onload = async function (e) {
+    const data = {
+      coffeeName: name,
+      price: price,
+      categoryID: categoryID,
+      imageURL: e.target.result,
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/add-product`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) throw new Error(await res.text());
+
+      alert("Thêm thành công!");
+      clearAddForm();
+      loadProducts();
+    } catch (err) {
+      alert("Lỗi khi thêm!");
+    }
+  };
+
+  reader.readAsDataURL(file);
+}
+
+// ================= DELETE =================
+async function deleteProduct(id) {
+  if (!confirm("Bạn chắc chắn muốn xóa?")) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/delete-product/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) throw new Error();
+
+    alert("Đã xóa!");
+    loadProducts();
+  } catch {
+    alert("Lỗi khi xóa!");
+  }
+}
+
+// ================= SHOW EDIT =================
+function showEditForm(id) {
+  const product = products.find((p) => p.coffeeID === id);
+  if (!product) return;
+
+  document.getElementById("editId").value = product.coffeeID;
+
+  document.getElementById("editName").value = product.coffeeName;
+
+  document.getElementById("editPrice").value =
+    product.price.toLocaleString("vi-VN") + " VND";
+
+  document.getElementById("editType").value = product.categoryID;
+
+  document.getElementById("editPreviewImage").src = product.imageURL;
+
+  document.getElementById("editPreviewImage").style.display = "block";
+
+  document.getElementById("editModal").style.display = "flex";
+  document.getElementById("overlay").style.display = "block";
+}
+
+// ================= SAVE EDIT =================
+async function saveEdit() {
+  const id = document.getElementById("editId").value;
+  const name = document.getElementById("editName").value.trim();
+  const priceStr = document.getElementById("editPrice").value;
+  const categoryID = parseInt(document.getElementById("editType").value);
+  const file = document.getElementById("editImage").files[0];
+
+  if (!name || !priceStr || !categoryID) {
+    alert("Vui lòng nhập đầy đủ!");
+    return;
+  }
+
+  const price = parseInt(priceStr.replace(/[^\d]/g, ""));
+  let imageURL = document.getElementById("editPreviewImage").src;
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = async function (e) {
+      await updateProduct(id, name, price, categoryID, e.target.result);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    await updateProduct(id, name, price, categoryID, imageURL);
+  }
+}
+
+// ================= UPDATE PRODUCT =================
+async function updateProduct(id, name, price, categoryID, imageURL) {
+  const data = {
+    coffeeName: name,
+    price: price,
+    categoryID: categoryID,
+    imageURL: imageURL,
+  };
+
+  try {
+    const res = await fetch(`${API_BASE}/update-product/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+
+    alert("Cập nhật thành công!");
+    cancelEdit();
+    loadProducts();
+  } catch {
+    alert("Lỗi khi cập nhật!");
+  }
+}
+
+// ================= UPDATE STATUS =================
+async function lockProduct(id) {
+  try {
+    const res = await fetch(`${API_BASE}/update-status/${id}`, {
+      method: "PUT",
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(err);
+    }
+
+    // const message = await res.text();
+    // alert(message);
+
+    loadProducts();
+  } catch (error) {
+    console.error(error);
+    alert("Lỗi khi cập nhật trạng thái!");
+  }
+}
+// ================= CLEAR FORM =================
 function clearAddForm() {
   document.getElementById("productName").value = "";
   document.getElementById("productPrice").value = "";
   document.getElementById("productImage").value = "";
   document.getElementById("previewImage").src = "";
   document.getElementById("previewImage").style.display = "none";
-  document.getElementById("productStock").value = "";
   document.getElementById("productType").value = "";
 }
 
-// Hiển thị danh sách (render vào tbody)
-function displayProducts() {
-  const tbody = document.getElementById("productTableBody");
-  if (!tbody) return;
-
-  tbody.innerHTML = ""; // Xóa cũ
-
-  let stt = 1;
-  let hasProduct = false;
-
-  for (const type in products) {
-    products[type].forEach((product, index) => {
-      hasProduct = true;
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${stt++}</td>
-        <td><img src="${product.image}" alt="${product.name}" style="width:60px; height:60px; object-fit:cover; border-radius:6px;"></td>
-        <td>${product.name}</td>
-        <td>${product.price}</td>
-        <td>${product.stock}</td>
-        <td>${type}</td>
-        <td>
-          <button class="btn-action" onclick="showEditForm('${type}', ${index})">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="btn-action" onclick="deleteProduct('${type}', ${index})">
-            <i class="fas fa-trash"></i>
-          </button>
-        </td>
-      `;
-      tbody.appendChild(row);
-    });
-  }
-
-  if (!hasProduct) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:40px; color:#8d6e63;">Chưa có món nào trong menu</td></tr>`;
-  }
-}
-
-// Xóa sản phẩm
-function deleteProduct(type, index) {
-  if (confirm("Bạn chắc chắn muốn xóa món này?")) {
-    products[type].splice(index, 1);
-    if (products[type].length === 0) delete products[type];
-    localStorage.setItem("products", JSON.stringify(products));
-    displayProducts();
-  }
-}
-
-// Mở modal sửa
-function showEditForm(type, index) {
-  const product = products[type][index];
-  editingType = type;
-  editingIndex = index;
-
-  document.getElementById("editName").value = product.name;
-  document.getElementById("editPrice").value = product.price;
-  document.getElementById("editPreviewImage").src = product.image;
-  document.getElementById("editPreviewImage").style.display = "block";
-  document.getElementById("editStock").value = product.stock;
-  document.getElementById("editType").value = type;
-
-  document.getElementById("editModal").style.display = "flex";
-  document.getElementById("overlay").style.display = "block";
-}
-
-// Lưu sửa
-function saveEdit() {
-  const name = document.getElementById("editName").value.trim();
-  const priceStr = document.getElementById("editPrice").value;
-  const stock = parseInt(document.getElementById("editStock").value);
-  const newType = document.getElementById("editType").value;
-  const file = document.getElementById("editImage").files[0];
-  let image = file
-    ? document.getElementById("editPreviewImage").src
-    : products[editingType][editingIndex].image;
-
-  const price = priceStr ? formatPrice(priceStr) : "";
-
-  if (!name || !price || isNaN(stock) || !newType) {
-    alert("Vui lòng điền đầy đủ thông tin!");
-    return;
-  }
-
-  const updatedProduct = { name, price, image, stock };
-
-  if (newType !== editingType) {
-    // Chuyển loại → xóa cũ, thêm mới
-    products[editingType].splice(editingIndex, 1);
-    if (products[editingType].length === 0) delete products[editingType];
-    if (!products[newType]) products[newType] = [];
-    products[newType].push(updatedProduct);
-  } else {
-    products[editingType][editingIndex] = updatedProduct;
-  }
-
-  localStorage.setItem("products", JSON.stringify(products));
-  displayProducts();
-  cancelEdit();
-}
-
-// Đóng modal sửa
+// ================= CLOSE MODAL =================
 function cancelEdit() {
   document.getElementById("editModal").style.display = "none";
   document.getElementById("overlay").style.display = "none";
+
   document.getElementById("editName").value = "";
   document.getElementById("editPrice").value = "";
   document.getElementById("editImage").value = "";
   document.getElementById("editPreviewImage").src = "";
   document.getElementById("editPreviewImage").style.display = "none";
-  document.getElementById("editStock").value = "";
-  document.getElementById("editType").value = "";
-  editingType = null;
-  editingIndex = null;
 }

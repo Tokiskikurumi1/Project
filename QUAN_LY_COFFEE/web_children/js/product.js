@@ -1,3 +1,4 @@
+// const API_BASE = "https://localhost:7129";
 const API_BASE = "https://localhost:7027/api";
 
 const categoryListEl = document.getElementById("categoryList");
