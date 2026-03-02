@@ -128,7 +128,7 @@ function renderProducts() {
     row.innerHTML = `
       <td>${index + 1}</td>
       <td>
-        <img src="${p.imageURL}"
+        <img src="https://localhost:7114${p.imageURL}"
         style="width:60px;height:60px;object-fit:cover;border-radius:6px;">
       </td>
       <td>${p.coffeeName}</td>
@@ -166,33 +166,44 @@ async function addProduct() {
 
   const price = parseInt(priceStr.replace(/[^\d]/g, ""));
 
-  const reader = new FileReader();
-  reader.onload = async function (e) {
+  try {
+    // 🔥 BƯỚC 1: Upload ảnh trước
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const uploadRes = await fetch(`${API_BASE}/upload-image`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!uploadRes.ok) throw new Error("Upload lỗi");
+
+    const uploadData = await uploadRes.json();
+    const imageURL = uploadData.imageUrl;
+
+    // 🔥 BƯỚC 2: Lưu product
     const data = {
       coffeeName: name,
       price: price,
       categoryID: categoryID,
-      imageURL: e.target.result,
+      imageURL: imageURL,
     };
 
-    try {
-      const res = await fetch(`${API_BASE}/add-product`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+    const res = await fetch(`${API_BASE}/add-product`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-      if (!res.ok) throw new Error(await res.text());
+    if (!res.ok) throw new Error(await res.text());
 
-      alert("Thêm thành công!");
-      clearAddForm();
-      loadProducts();
-    } catch (err) {
-      alert("Lỗi khi thêm!");
-    }
-  };
-
-  reader.readAsDataURL(file);
+    alert("Thêm thành công!");
+    clearAddForm();
+    loadProducts();
+  } catch (err) {
+    console.error(err);
+    alert("Lỗi khi thêm!");
+  }
 }
 
 // ================= DELETE =================
@@ -227,7 +238,8 @@ function showEditForm(id) {
 
   document.getElementById("editType").value = product.categoryID;
 
-  document.getElementById("editPreviewImage").src = product.imageURL;
+  document.getElementById("editPreviewImage").src =
+  "https://localhost:7114" + product.imageURL;
 
   document.getElementById("editPreviewImage").style.display = "block";
 
@@ -249,16 +261,35 @@ async function saveEdit() {
   }
 
   const price = parseInt(priceStr.replace(/[^\d]/g, ""));
-  let imageURL = document.getElementById("editPreviewImage").src;
+  let imageURL = null;
 
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = async function (e) {
-      await updateProduct(id, name, price, categoryID, e.target.result);
-    };
-    reader.readAsDataURL(file);
-  } else {
+  try {
+    // 🔥 Nếu có chọn ảnh mới → upload trước
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const uploadRes = await fetch(`${API_BASE}/upload-image`, {
+        method: "POST",
+        body: formData
+      });
+
+      if (!uploadRes.ok) throw new Error("Upload lỗi");
+
+      const uploadData = await uploadRes.json();
+      imageURL = uploadData.imageUrl;
+    } else {
+      // 🔥 Nếu không chọn ảnh mới → giữ ảnh cũ
+      const previewSrc = document.getElementById("editPreviewImage").src;
+
+      imageURL = previewSrc.replace("https://localhost:7114", "");
+    }
+
     await updateProduct(id, name, price, categoryID, imageURL);
+
+  } catch (err) {
+    console.error(err);
+    alert("Lỗi khi cập nhật!");
   }
 }
 

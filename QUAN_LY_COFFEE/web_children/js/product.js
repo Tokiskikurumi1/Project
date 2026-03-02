@@ -1,5 +1,6 @@
 // const API_BASE = "https://localhost:7129";
 const API_BASE = "https://localhost:7027/api";
+const BACKEND_URL = "https://localhost:7114";
 
 const categoryListEl = document.getElementById("categoryList");
 const productListEl = document.getElementById("product-list");
@@ -116,12 +117,14 @@ function renderProducts() {
   // ===== RENDER PRODUCT =====
   paginatedItems.forEach((product) => {
     const div = document.createElement("a");
-    div.href = "#";
+    div.href = `detail_product.html?id=${product.coffeeID}`;
     div.className = "box";
 
     div.innerHTML = `
-      <img src="${product.imageURL || "./img/default.png"}" />
-      <h3 style="color:black;">${product.coffeeName}</h3>
+      <img src="${
+        product.imageURL ? BACKEND_URL + product.imageURL : "./img/default.png"
+      }" />
+      <h3 style="color:black; text-align:center;">${product.coffeeName}</h3>
       <div class="info">
         <span>${formatPrice(product.price)} VNĐ</span>
         <i class="fa-solid fa-cart-plus"></i>
