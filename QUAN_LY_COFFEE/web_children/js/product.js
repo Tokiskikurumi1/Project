@@ -177,20 +177,46 @@ function attachCartEvents() {
   const cartIcons = document.querySelectorAll(".fa-cart-plus");
 
   cartIcons.forEach((icon) => {
-    icon.addEventListener("click", (e) => {
+    icon.addEventListener("click", async (e) => {
       e.preventDefault();
       e.stopPropagation();
 
-      const box = icon.closest(".box");
-      const productName = box.querySelector("h3").textContent;
-      const price = box.querySelector(".info span").textContent;
-      const imageSrc = box.querySelector("img").src;
+      const token = localStorage.getItem("accessToken");
 
-      addToCart(productName, price, imageSrc);
+      if (!token) {
+        alert("Vui lòng đăng nhập!");
+        return;
+      }
+
+      const coffeeID = icon.id.split("-")[2]; // lấy ID từ cart-icon-3
+
+      try {
+        const res = await fetch(`${API_BASE}/Cart/add`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            coffeeId: parseInt(coffeeID),
+            quantity: 1,
+          }),
+        });
+
+        const message = await res.text();
+
+        if (!res.ok) {
+          alert(message);
+          return;
+        }
+
+        alert("Đã thêm vào giỏ hàng!");
+      } catch (err) {
+        console.error("Lỗi thêm giỏ hàng:", err);
+      }
     });
   });
 }
-
 // ========================== SEARCH EVENT ==========================
 searchButton.addEventListener("click", () => {
   currentPage = 1;
