@@ -31,6 +31,38 @@
       <main class="admin-main">
         <section class="bills-card">
           <h2><i class="fas fa-receipt"></i> Quản lý hóa đơn</h2>
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label>Từ ngày</label>
+              <input type="date" id="fromDate" />
+            </div>
+
+            <div class="filter-group">
+              <label>Đến ngày</label>
+              <input type="date" id="toDate" />
+            </div>
+
+            <div class="filter-group">
+              <label>Mức tổng tiền</label>
+              <select id="totalRange">
+                <option value="">-- Tất cả --</option>
+                <option value="0-100000">0đ - 100.000đ</option>
+                <option value="100000-300000">100.000đ - 300.000đ</option>
+                <option value="300000-500000">300.000đ - 500.000đ</option>
+                <option value="500000+">Trên 500.000đ</option>
+              </select>
+            </div>
+
+            <div class="filter-actions">
+              <button class="btn-primary" onclick="filterBills()">
+                <i class="fas fa-filter"></i> Lọc
+              </button>
+
+              <button class="btn-secondary" onclick="resetFilter()">
+                <i class="fas fa-rotate-left"></i> Reset
+              </button>
+            </div>
+          </div>
           <div class="table-container">
             <table class="bills-table">
               <thead>
@@ -39,6 +71,7 @@
                   <th>Mã hóa đơn</th>
                   <th>Ngày lập</th>
                   <th>Tổng tiền</th>
+                  <th>Trạng thái</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
@@ -72,14 +105,13 @@
           <thead>
             <tr>
               <th>Tên sản phẩm</th>
-              <th>Giá</th>
               <th>Số lượng</th>
-              <th>Thành tiền</th>
+              <th>Giá</th>
             </tr>
           </thead>
           <tbody id="billDetailItems"></tbody>
         </table>
-
+        <span>Tổng tiền: <span id="totalAmount"></span></span>
         <div class="modal-actions">
           <button class="btn-secondary" onclick="hideBillDetailForm()">
             Đóng

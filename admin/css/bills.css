@@ -144,6 +144,8 @@ h2 {
 .modal,
 .overlay {
   display: none;
+  position: fixed;
+  inset: 0;
 }
 
 /* Khi add class .active thì hiện */
@@ -175,7 +177,84 @@ h2 {
   overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
+/* ================= FILTER BAR ================= */
+.filter-bar {
+  background: #fff8f5;
+  padding: 18px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  border: 1px solid #e5d6c8;
+}
 
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b4e31;
+}
+
+.filter-group input {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #c8b6a6;
+  font-size: 14px;
+  min-width: 150px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary {
+  background: #8d6e63;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  background: #6b4e31;
+}
+
+.btn-secondary {
+  background: #d7ccc8;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #bcaaa4;
+}
+.filter-group select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #c8b6a6;
+  font-size: 14px;
+  min-width: 180px;
+  background: white;
+  cursor: pointer;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #8d6e63;
+}
 /* Responsive */
 @media (max-width: 768px) {
   .bills-table thead {

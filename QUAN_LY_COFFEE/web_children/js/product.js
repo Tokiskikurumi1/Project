@@ -210,7 +210,19 @@ function attachCartEvents() {
           return;
         }
 
-        alert("Đã thêm vào giỏ hàng!");
+        // alert("Đã thêm vào giỏ hàng!");
+        // icon.style.color = "green";
+        // setTimeout(() => {
+        //   icon.style.color = "";
+        // }, 1000);
+        icon.classList.remove("fa-cart-plus");
+        icon.classList.add("fa-check");
+        icon.style.color = "green";
+        // Sau 1 giây đổi lại icon giỏ hàng
+        setTimeout(() => {
+          icon.classList.remove("fa-check");
+          icon.classList.add("fa-cart-plus");
+        }, 1000);
       } catch (err) {
         console.error("Lỗi thêm giỏ hàng:", err);
       }
