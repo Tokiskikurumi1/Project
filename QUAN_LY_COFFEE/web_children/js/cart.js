@@ -1,125 +1,147 @@
-// Đợi DOM tải xong
-document.addEventListener("DOMContentLoaded", () => {
-  // Chạy menu
-  const menu_icon = document.querySelector("#menu-icon");
-  const ul_bar = document.querySelector(".ul-bar");
-  if (menu_icon && ul_bar) {
-    menu_icon.addEventListener("click", toggleMenu);
-    menu_icon.addEventListener("touchstart", toggleMenu); // Hỗ trợ mobile
-  }
+const API_BASE = "https://localhost:7027/api";
+const BACKEND_URL = "https://localhost:7114";
 
-  function toggleMenu(e) {
-    ul_bar.classList.toggle("active");
-    if (searchBox) searchBox.classList.remove("active");
-    e.preventDefault(); // Ngăn hành vi mặc định trên mobile
-  }
-});
+const token = localStorage.getItem("accessToken");
 
-// Lấy dữ liệu từ localStorage
-const cart = JSON.parse(localStorage.getItem("list-dish")) || [];
+const cartTable = document.getElementById("cart-items");
+const totalPriceEl = document.getElementById("total-price");
 
-function displayCart() {
-  const cartItems = document.getElementById("cart-items");
-  let total = 0;
+let cartData = [];
 
-  if (cart.length === 0) {
-    cartItems.innerHTML =
-      '<tr><td colspan="4" rowspan="2">Giỏ hàng trống</td></tr>';
-  } else {
-    cartItems.innerHTML = cart
-      .map((item) => {
-        const priceNum = parseFloat(item.price.replace(/[^\d]/g, ""));
-        const itemTotal = priceNum * item.quantity;
-        total += itemTotal;
-        return `
-          <tr>
-            <td>
-              <div class="product-name">
-                <img src="${item.image}" alt="" />
-                <span>${item.name}</span>
-              </div>
-            </td>
-            <td>${item.price}</td>
-            <td>
-              <button onclick="updateQuantity('${item.name}', -1)">-</button>
-              <input type="number" value="${item.quantity}" readonly />
-              <button onclick="updateQuantity('${item.name}', 1)">+</button>
-            </td>
-            <td>${itemTotal.toLocaleString("vi-VN")}VND</td>
-          </tr>
-        `;
-      })
-      .join("");
-  }
+// ================= LOAD CART =================
+async function loadCart() {
+  const token = localStorage.getItem("accessToken");
 
-  // Cập nhật tổng tiền
-  document.getElementById("total-price").textContent = `${total.toLocaleString(
-    "vi-VN"
-  )}VND`;
-}
-
-// HÀM CẬP NHẬT THAY ĐỔI SỐ LƯỢNG SẢN PHẨM TRONG GIỎ HÀNG
-function updateQuantity(productName, change) {
-  const item = cart.find((item) => item.name === productName);
-  if (item) {
-    item.quantity += change;
-    if (item.quantity <= 0) {
-      cart.splice(cart.indexOf(item), 1); // Xóa sản phẩm nếu số lượng <= 0
-    }
-    localStorage.setItem("list-dish", JSON.stringify(cart));
-    displayCart(); // Cập nhật lại giao diện
-  }
-}
-
-// Hiển thị form thanh toán
-function showCheckoutForm() {
-  if (cart.length === 0) {
-    alert("Giỏ hàng trống, không thể đặt hàng!");
+  if (!token) {
+    alert("Bạn chưa đăng nhập!");
     return;
   }
+
+  const response = await fetch(`${API_BASE}/Cart`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response.status === 401) {
+    alert("Phiên đăng nhập hết hạn!");
+    localStorage.removeItem("accessToken");
+    return;
+  }
+
+  const data = await response.json();
+  console.log("Cart data:", data);
+
+  cartData = data;
+  renderCart();
+}
+
+// ================= RENDER CART =================
+function renderCart() {
+  cartTable.innerHTML = "";
+  let total = 0;
+
+  if (!cartData || cartData.length === 0) {
+    cartTable.innerHTML = `<tr><td colspan="6" style="text-align: center;">Giỏ hàng trống</td></tr>`;
+    totalPriceEl.innerText = "0 VND";
+    return;
+  }
+
+  cartData.forEach((item) => {
+    total += item.subTotal;
+
+    cartTable.innerHTML += `
+      <tr>
+        <td><img src="${item.imageURL ? BACKEND_URL + item.imageURL : "./img/default.png"}" width="60"/></td>
+        <td>${item.coffeeName}</td>
+        <td>${formatMoney(item.unitPrice)}</td>
+        <td>
+          <button onclick="changeQuantity(${item.billDetailID}, ${
+            item.quantity - 1
+          })">-</button>
+          <span class="quantity">${item.quantity}</span>
+          <button onclick="changeQuantity(${item.billDetailID}, ${
+            item.quantity + 1
+          })">+</button>
+        </td>
+        <td>${formatMoney(item.subTotal)}</td>
+      </tr>
+    `;
+  });
+
+  totalPriceEl.innerText = formatMoney(total);
+}
+
+// ================= UPDATE QUANTITY =================
+async function changeQuantity(billDetailID, newQuantity) {
+  const token = localStorage.getItem("accessToken");
+
+  try {
+    const res = await fetch(`${API_BASE}/Cart/update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        billDetailID: billDetailID,
+        quantity: newQuantity,
+      }),
+    });
+
+    const message = await res.text();
+
+    if (!res.ok) {
+      alert(message);
+      return;
+    }
+
+    await loadCart();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// ================= CHECKOUT =================
+async function processCheckout() {
+  const token = localStorage.getItem("accessToken");
+
+  try {
+    const res = await fetch(`${API_BASE}/Cart/checkout`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const message = await res.text();
+
+    if (!res.ok) {
+      alert(message);
+      return;
+    }
+
+    alert(message);
+    loadCart();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// ================= FORMAT MONEY =================
+function formatMoney(number) {
+  return number.toLocaleString("vi-VN") + " VND";
+}
+
+// ================= SHOW / HIDE FORM =================
+function showCheckoutForm() {
   document.getElementById("checkoutForm").style.display = "block";
 }
 
-// Ẩn form thanh toán
 function hideCheckoutForm() {
   document.getElementById("checkoutForm").style.display = "none";
-  document.getElementById("customerName").value = "";
-  document.getElementById("customerPhone").value = "";
-  document.getElementById("customerAddress").value = "";
 }
 
-// Xử lý thanh toán
-function processCheckout() {
-  const name = document.getElementById("customerName").value;
-  const phone = document.getElementById("customerPhone").value;
-  const address = document.getElementById("customerAddress").value;
-
-  if (name && phone && address) {
-    // Tạo hóa đơn
-    const order = {
-      customer: { name, phone, address },
-      items: [...cart],
-      total: document.getElementById("total-price").textContent,
-      date: new Date().toISOString(),
-    };
-
-    // Lưu hóa đơn vào LocalStorage
-    let orders = JSON.parse(localStorage.getItem("orders")) || [];
-    orders.push(order);
-    localStorage.setItem("orders", JSON.stringify(orders));
-
-    // Xóa giỏ hàng sau khi thanh toán
-    localStorage.removeItem("list-dish");
-    cart.length = 0;
-
-    // Ẩn form và hiển thị thông báo
-    hideCheckoutForm();
-    alert("Thanh toán thành công!");
-    displayCart();
-  } else {
-    alert("Vui lòng điền đầy đủ thông tin!");
-  }
-}
-
-// Hiển thị giỏ hàng khi trang được tải
-document.addEventListener("DOMContentLoaded", displayCart);
+// ================= INIT =================
+loadCart();

@@ -127,7 +127,7 @@ function renderProducts() {
       <h3 style="color:black; text-align:center;">${product.coffeeName}</h3>
       <div class="info">
         <span>${formatPrice(product.price)} VNĐ</span>
-        <i class="fa-solid fa-cart-plus"></i>
+        <i id="cart-icon-${product.coffeeID}" class="fa-solid fa-cart-plus"></i>
       </div>
     `;
 
