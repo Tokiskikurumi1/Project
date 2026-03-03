@@ -39,6 +39,6 @@ function updateLoginStatus() {
     }
   } else {
     loginTable.innerHTML = `
-  <span><a href="./QUAN_LY_COFFEE/web_children/login.html">Đăng nhập</a></span>`;
+  <span><a href="./login.html">Đăng nhập</a></span>`;
   }
 }

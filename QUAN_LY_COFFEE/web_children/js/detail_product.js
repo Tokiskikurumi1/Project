@@ -64,10 +64,52 @@ increaseBtn.addEventListener("click", () => {
 });
 
 // ===== ADD TO CART =====
-document.getElementById("add-to-cart-btn").addEventListener("click", () => {
-  const quantity = parseInt(quantityInput.value);
+document
+  .getElementById("add-to-cart-btn")
+  .addEventListener("click", async () => {
+    const token = localStorage.getItem("accessToken");
 
-  alert(`Đã thêm ${quantity} sản phẩm vào giỏ hàng`);
-});
+    // ❌ CHƯA LOGIN
+    if (!token) {
+      alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      window.location.href = "#";
+      return;
+    }
 
+    const quantity = parseInt(quantityInput.value);
+
+    try {
+      const res = await fetch(`${API_BASE}/Cart/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 🔥 gửi JWT
+        },
+        body: JSON.stringify({
+          coffeeID: parseInt(coffeeID),
+          quantity: quantity,
+        }),
+      });
+
+      // 🔴 Token hết hạn hoặc sai
+      if (res.status === 401) {
+        alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        localStorage.removeItem("accessToken");
+        window.location.href = "#";
+        return;
+      }
+
+      const message = await res.text();
+
+      if (!res.ok) {
+        alert("Lỗi: " + message);
+        return;
+      }
+
+      alert("Thêm vào giỏ hàng thành công!");
+    } catch (err) {
+      console.error("Lỗi add to cart:", err);
+      alert("Không thể kết nối đến server");
+    }
+  });
 loadCoffeeDetail();
