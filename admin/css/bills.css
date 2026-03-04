@@ -172,7 +172,7 @@ h2 {
   background: white;
   border-radius: 12px;
   padding: 24px;
-  max-width: 90%;
+  width: 50%;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -254,6 +254,11 @@ h2 {
 .filter-group select:focus {
   outline: none;
   border-color: #8d6e63;
+}
+/* Căn giữa nội dung bảng chi tiết hóa đơn */
+.detail-table th,
+.detail-table td {
+  text-align: center;
 }
 /* Responsive */
 @media (max-width: 768px) {

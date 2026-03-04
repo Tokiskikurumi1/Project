@@ -42,6 +42,31 @@ h2 {
   align-items: center;
   gap: 12px;
 }
+/* ===== FILTER BAR ===== */
+.filter-bar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-group input,
+.filter-group select {
+  padding: 10px 14px;
+  border: 1px solid #d7ccc8;
+  border-radius: 8px;
+  font-size: 14px;
+  min-width: 220px;
+  transition: 0.2s;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+  outline: none;
+  border-color: #8d6e63;
+  box-shadow: 0 0 0 3px rgba(141, 110, 99, 0.15);
+}
 
 .table-container {
   overflow-x: auto;
@@ -172,8 +197,8 @@ input:focus {
 }
 
 .btn-secondary {
-  background: #bdbdbd;
-  color: #333;
+  background: #6b4e31;
+  color: #bdbdbd;
   border: none;
   padding: 12px 24px;
   border-radius: 8px;

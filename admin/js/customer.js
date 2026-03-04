@@ -1,6 +1,6 @@
 // ================= CONFIG =================
 const BASE_URL = "https://localhost:7114/api";
-
+let allCustomers = [];
 // ================= HELPER: CHECK NULL =================
 function displayValue(value) {
   if (
@@ -21,6 +21,7 @@ async function loadCustomers() {
     if (!res.ok) throw new Error("Không load được khách hàng");
 
     const data = await res.json();
+    allCustomers = data; // lưu lại
     renderCustomers(data);
   } catch (err) {
     console.error(err);
@@ -28,7 +29,28 @@ async function loadCustomers() {
       `<tr><td colspan="6" style="text-align:center">Lỗi tải dữ liệu</td></tr>`;
   }
 }
+// ================= APPLY FILTER =================
+function applyFilter() {
+  const keyword = document.getElementById("searchName").value.toLowerCase();
 
+  const status = document.getElementById("statusFilter").value;
+
+  let filtered = allCustomers;
+
+  // lọc theo tên
+  if (keyword) {
+    filtered = filtered.filter((c) =>
+      c.fullName?.toLowerCase().includes(keyword),
+    );
+  }
+
+  // lọc theo trạng thái
+  if (status !== "") {
+    filtered = filtered.filter((c) => c.status.toString() === status);
+  }
+
+  renderCustomers(filtered);
+}
 // ================= RENDER TABLE =================
 function renderCustomers(customers) {
   const tbody = document.getElementById("customer-list");
@@ -62,6 +84,8 @@ function renderCustomers(customers) {
         <td>${displayValue(c.address)}</td>
         <td>${totalSpent}</td>
         <td class="action-icons">
+        <i class="fa-solid fa-eye"
+        onclick="viewCustomerDetail(${c.userID})"></i>
           ${statusIcon}
         </td>
       </tr>
@@ -169,5 +193,71 @@ async function updateStatus(userID, status) {
   }
 }
 
+// ================= VIEW CUSTOMER DETAIL =================
+async function viewCustomerDetail(userID) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/ManageCustomer/get-customer-detail/${userID}`,
+    );
+
+    if (!res.ok) throw new Error("Không lấy được chi tiết khách hàng");
+
+    const data = await res.json();
+
+    if (!data || data.length === 0) {
+      alert("Không có dữ liệu khách hàng!");
+      return;
+    }
+
+    showCustomerDetail(data[0]);
+  } catch (err) {
+    console.error(err);
+    alert("Lỗi khi tải chi tiết khách hàng");
+  }
+}
+
+// ================= SHOW CUSTOMER DETAIL =================
+function showCustomerDetail(customer) {
+  document.getElementById("detailName").innerText = displayValue(
+    customer.fullName,
+  );
+
+  document.getElementById("detailGender").innerText = displayValue(
+    customer.gender,
+  );
+
+  document.getElementById("detailAddress").innerText = displayValue(
+    customer.address,
+  );
+
+  document.getElementById("detailPhone").innerText = displayValue(
+    customer.phone,
+  );
+
+  document.getElementById("detailEmail").innerText = displayValue(
+    customer.email,
+  );
+
+  document.getElementById("detailCreateAt").innerText = customer.createdAt
+    ? new Date(customer.createdAt).toLocaleDateString()
+    : "Chưa cập nhật";
+
+  document.getElementById("detailStatus").innerText =
+    customer.status === 1 ? "Đang hoạt động" : "Đã bị khóa";
+
+  document.getElementById("detailCustomerModal").style.display = "flex";
+}
+
+// ================= HIDE CUSTOMER DETAIL =================
+function hideCustomerDetail() {
+  document.getElementById("detailCustomerModal").style.display = "none";
+}
+
+// ================= RESET FILTER =================
+function resetFilter() {
+  document.getElementById("searchName").value = "";
+  document.getElementById("statusFilter").value = "";
+  renderCustomers(allCustomers);
+}
 // ================= INIT =================
 document.addEventListener("DOMContentLoaded", loadCustomers);
