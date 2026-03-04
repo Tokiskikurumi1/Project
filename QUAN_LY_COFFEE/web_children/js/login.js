@@ -120,15 +120,15 @@ signInBtn.addEventListener("click", async () => {
       }),
     });
 
+    const data = await res.json(); // 🔥 luôn parse JSON trước
+
     if (!res.ok) {
-      const err = await res.text();
-      console.log(err);
-      alert("Sai tài khoản hoặc mật khẩu");
+      // 🔥 Hiện đúng message backend trả về
+      alert(data.message || "Đăng nhập thất bại");
       return;
     }
 
-    const data = await res.json();
-
+    // Thành công
     localStorage.setItem("accessToken", data.accessToken);
     localStorage.setItem("role", data.role);
     localStorage.setItem("user", data.user);

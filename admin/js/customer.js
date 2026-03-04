@@ -1,80 +1,173 @@
-// customer.js
+// ================= CONFIG =================
+const BASE_URL = "https://localhost:7114/api";
 
-// Lấy dữ liệu hóa đơn từ LocalStorage
-const orders = JSON.parse(localStorage.getItem("orders")) || [];
-let editingIndex = null;
+// ================= HELPER: CHECK NULL =================
+function displayValue(value) {
+  if (
+    value === null ||
+    value === undefined ||
+    value === "" ||
+    value === "null"
+  ) {
+    return "Chưa cập nhật";
+  }
+  return value;
+}
 
-function displayCustomers() {
-  const customerList = document.getElementById("customer-list");
-  customerList.innerHTML = ""; // Xóa nội dung cũ
+// ================= LOAD ALL CUSTOMER =================
+async function loadCustomers() {
+  try {
+    const res = await fetch(`${BASE_URL}/ManageCustomer/get-all-customer`);
+    if (!res.ok) throw new Error("Không load được khách hàng");
 
-  if (orders.length === 0) {
-    customerList.innerHTML =
-      '<tr><td colspan="6">Chưa có khách hàng nào</td></tr>';
-  } else {
-    orders.forEach((order, index) => {
-      const row = document.createElement("tr");
-      const orderId = `HD${String(index + 1).padStart(4, "0")}`;
-      row.innerHTML = `
+    const data = await res.json();
+    renderCustomers(data);
+  } catch (err) {
+    console.error(err);
+    document.getElementById("customer-list").innerHTML =
+      `<tr><td colspan="6" style="text-align:center">Lỗi tải dữ liệu</td></tr>`;
+  }
+}
+
+// ================= RENDER TABLE =================
+function renderCustomers(customers) {
+  const tbody = document.getElementById("customer-list");
+  tbody.innerHTML = "";
+
+  if (!customers || customers.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center">Chưa có khách hàng</td></tr>`;
+    return;
+  }
+
+  customers.forEach((c, index) => {
+    const statusIcon =
+      c.status === 1
+        ? `<i class="fas fa-lock-open status-active"
+             title="Đang hoạt động - Click để khóa"
+             onclick="updateStatus(${c.userID},0)"></i>`
+        : `<i class="fas fa-lock status-locked"
+             title="Đang bị khóa - Click để mở khóa"
+             onclick="updateStatus(${c.userID},1)"></i>`;
+
+    const totalSpent =
+      c.totalSpent && c.totalSpent > 0
+        ? c.totalSpent.toLocaleString() + " đ"
+        : "Chưa có";
+
+    const row = `
+      <tr>
         <td>${index + 1}</td>
-        <td>${order.customer.name}</td>
-        <td>${order.customer.phone}</td>
-        <td>${order.customer.address}</td>
-        <td>${orderId}</td>
-        <td>
-          <button onclick="showEditCustomerForm(${index})">Sửa</button>
-          <button onclick="deleteCustomer(${index})">Xóa</button>
+        <td>${displayValue(c.fullName)}</td>
+        <td>${displayValue(c.phone)}</td>
+        <td>${displayValue(c.address)}</td>
+        <td>${totalSpent}</td>
+        <td class="action-icons">
+          ${statusIcon}
         </td>
-      `;
-      customerList.appendChild(row);
-    });
+      </tr>
+    `;
+
+    tbody.innerHTML += row;
+  });
+}
+
+// ================= VIEW BILL DETAIL =================
+async function viewBill(billID) {
+  if (!billID) {
+    alert("Khách hàng chưa có hóa đơn!");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BASE_URL}/ManageCustomer/bill-detail/${billID}`);
+
+    if (!res.ok) throw new Error("Không lấy được chi tiết hóa đơn");
+
+    const data = await res.json();
+    showBillDetail(data);
+  } catch (err) {
+    console.error(err);
+    alert("Lỗi khi tải chi tiết hóa đơn");
   }
 }
 
-// Hiển thị form sửa khách hàng
-function showEditCustomerForm(index) {
-  const order = orders[index];
-  editingIndex = index;
+// ================= SHOW MODAL =================
+function showBillDetail(details) {
+  if (!details || details.length === 0) return;
 
-  document.getElementById("editName").value = order.customer.name;
-  document.getElementById("editPhone").value = order.customer.phone;
-  document.getElementById("editAddress").value = order.customer.address;
-  document.getElementById("editCustomerForm").style.display = "block";
+  const first = details[0];
+
+  document.getElementById("detailBillId").innerText = displayValue(
+    first.billID,
+  );
+
+  document.getElementById("detailDate").innerText = first.billDate
+    ? new Date(first.billDate).toLocaleDateString()
+    : "Chưa cập nhật";
+
+  document.getElementById("detailCustomer").innerText = displayValue(
+    first.fullName,
+  );
+
+  document.getElementById("detailPhone").innerText = displayValue(first.phone);
+
+  document.getElementById("detailTotal").innerText = first.totalAmount
+    ? first.totalAmount.toLocaleString() + " đ"
+    : "Chưa cập nhật";
+
+  const tbody = document.getElementById("detailBody");
+  tbody.innerHTML = "";
+
+  details.forEach((item) => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${displayValue(item.coffeeName)}</td>
+        <td>${displayValue(item.quantity)}</td>
+        <td>${
+          item.unitPrice
+            ? item.unitPrice.toLocaleString() + " đ"
+            : "Chưa cập nhật"
+        }</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("totalAmount").innerText = first.totalAmount
+    ? first.totalAmount.toLocaleString() + " đ"
+    : "Chưa cập nhật";
+
+  document.getElementById("billDetailModal").style.display = "block";
 }
 
-// Lưu thông tin sửa
-function saveEditCustomer() {
-  const name = document.getElementById("editName").value;
-  const phone = document.getElementById("editPhone").value;
-  const address = document.getElementById("editAddress").value;
+// ================= HIDE MODAL =================
+function hideBillDetailForm() {
+  document.getElementById("billDetailModal").style.display = "none";
+}
 
-  if (name && phone && address) {
-    orders[editingIndex].customer = { name, phone, address };
-    localStorage.setItem("orders", JSON.stringify(orders));
-    displayCustomers();
-    cancelEditCustomer();
-  } else {
-    alert("Vui lòng điền đầy đủ thông tin!");
+// ================= UPDATE STATUS =================
+async function updateStatus(userID, status) {
+  const confirmText =
+    status === 0
+      ? "Bạn có chắc muốn KHÓA tài khoản này?"
+      : "Bạn có chắc muốn MỞ KHÓA tài khoản này?";
+
+  if (!confirm(confirmText)) return;
+
+  try {
+    const res = await fetch(
+      `${BASE_URL}/ManageCustomer/update-status/${userID}/${status}`,
+      { method: "PUT" },
+    );
+
+    const message = await res.text();
+    if (!res.ok) throw new Error(message);
+
+    alert(message);
+    loadCustomers();
+  } catch (err) {
+    alert(err.message);
   }
 }
 
-// Hủy sửa
-function cancelEditCustomer() {
-  document.getElementById("editCustomerForm").style.display = "none";
-  document.getElementById("editName").value = "";
-  document.getElementById("editPhone").value = "";
-  document.getElementById("editAddress").value = "";
-  editingIndex = null;
-}
-
-// Xóa khách hàng
-function deleteCustomer(index) {
-  if (confirm("Bạn có chắc muốn xóa khách hàng này?")) {
-    orders.splice(index, 1);
-    localStorage.setItem("orders", JSON.stringify(orders));
-    displayCustomers();
-  }
-}
-
-// Hiển thị danh sách khách hàng khi trang được tải
-document.addEventListener("DOMContentLoaded", displayCustomers);
+// ================= INIT =================
+document.addEventListener("DOMContentLoaded", loadCustomers);

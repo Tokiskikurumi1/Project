@@ -180,6 +180,40 @@ input:focus {
   cursor: pointer;
 }
 
+.action-icons i {
+  margin: 0 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+.view-icon {
+  color: #007bff;
+}
+
+.view-icon:hover {
+  color: #0056b3;
+}
+
+.status-active {
+  color: green;
+}
+
+.status-active:hover {
+  color: darkgreen;
+}
+
+.status-locked {
+  color: red;
+}
+
+.status-locked:hover {
+  color: darkred;
+}
+
+.no-action {
+  color: #aaa;
+}
 /* Responsive cho bảng trên mobile */
 @media (max-width: 768px) {
   .customers-table thead {

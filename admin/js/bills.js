@@ -95,8 +95,6 @@ async function viewBillDetail(id) {
     document.getElementById("totalAmount").innerText = formatMoney(
       bill.totalAmount,
     );
-
-    document.getElementById("billDetailModal").style.display = "block";
   } catch (err) {
     console.error("Lỗi chi tiết hóa đơn:", err);
   }
@@ -129,8 +127,13 @@ async function deleteBill(id) {
    MODAL CLOSE
 ============================== */
 function hideBillDetailForm() {
-  document.getElementById("billDetailModal").classList.remove("active");
-  document.getElementById("overlay").classList.remove("active");
+  const modal = document.getElementById("billDetailModal");
+  const overlay = document.getElementById("overlay");
+
+  modal.classList.remove("active");
+  overlay.classList.remove("active");
+
+  modal.style.display = "none"; // thêm dòng này cho chắc
 }
 
 /* ==============================
