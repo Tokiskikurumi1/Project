@@ -134,7 +134,11 @@ signInBtn.addEventListener("click", async () => {
     localStorage.setItem("user", data.user);
 
     alert("Đăng nhập thành công");
-    window.location.href = "../../index.html";
+    if (data.role === "Khách hàng") {
+      window.location.href = "../../index.html";
+    } else if (data.role === "Nhân viên") {
+      window.location.href = "../../staff/dashboard.html";
+    }
   } catch (err) {
     console.error(err);
     alert("Không kết nối được server");
