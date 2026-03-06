@@ -35,17 +35,27 @@
       <main class="admin-main">
         <section class="report-card">
           <h2><i class="fas fa-chart-line"></i> Báo cáo doanh thu</h2>
-
           <!-- Bộ lọc -->
-          <div
-            class="filter-bar"
-            style="
-              display: flex;
-              gap: 16px;
-              flex-wrap: wrap;
-              margin-bottom: 24px;
-            "
-          >
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label>Từ ngày</label>
+              <input type="date" id="fromDate" />
+            </div>
+
+            <div class="filter-group">
+              <label>Đến ngày</label>
+              <input type="date" id="toDate" />
+            </div>
+
+            <div class="filter-actions">
+              <button class="btn-primary" onclick="filterBills()">
+                <i class="fas fa-filter"></i> Lọc
+              </button>
+
+              <button class="btn-secondary" onclick="resetFilter()">
+                <i class="fas fa-rotate-left"></i> Reset
+              </button>
+            </div>
             <select id="reportPeriod">
               <option value="today">Hôm nay</option>
               <option value="week">Tuần này</option>
@@ -127,7 +137,7 @@
 
           <!-- Biểu đồ top sản phẩm bán chạy (cột) -->
           <div
-            class="chart-container"
+            class="chart-container-product"
             style="
               background: white;
               padding: 24px;
@@ -140,125 +150,41 @@
             </h3>
             <canvas id="topProductsChart" height="300"></canvas>
           </div>
+          <div class="chart-container-category">
+            <h3 style="margin-bottom: 16px; color: #6b4e31">
+              Doanh thu theo danh mục
+            </h3>
+            <canvas id="categoryChart" style="max-height: 600px"></canvas>
+          </div>
+          <div
+            style="
+              background: white;
+              padding: 24px;
+              border-radius: 12px;
+              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+              margin-top: 24px;
+            "
+          >
+            <h3 style="margin-bottom: 16px; color: #6b4e31">Top khách hàng</h3>
 
-          <!-- Top món bán chạy dạng text (dự phòng) -->
-          <div id="topItemList" style="margin-top: 24px">
-            <h3>Top món bán chạy:</h3>
-            <ul id="topItems" style="list-style: none; padding: 0"></ul>
+            <table
+              style="width: 100%; border-collapse: collapse; text-align: left"
+            >
+              <thead>
+                <tr style="background: #6b4e31">
+                  <th style="padding: 12px">Tên khách hàng</th>
+                  <th style="padding: 12px">Tổng hóa đơn</th>
+                  <th style="padding: 12px">Tổng chi</th>
+                </tr>
+              </thead>
+              <tbody id="topCustomers"></tbody>
+            </table>
           </div>
         </section>
       </main>
     </div>
 
     <script src="./js/header_siderbar.js"></script>
-    <script>
-      // Dữ liệu cứng để demo giao diện (sau này lấy từ orders)
-      const demoTopProducts = [
-        { name: "Cà phê sữa đá", quantity: 320, revenue: 4800000 },
-        { name: "Trà sữa trân châu", quantity: 285, revenue: 4275000 },
-        { name: "Matcha latte", quantity: 210, revenue: 3150000 },
-        { name: "Cappuccino nóng", quantity: 180, revenue: 2700000 },
-        { name: "Sinh tố dâu", quantity: 145, revenue: 2175000 },
-        { name: "Espresso", quantity: 120, revenue: 1800000 },
-        { name: "Trà đào cam sả", quantity: 110, revenue: 1650000 },
-        { name: "Latte nóng", quantity: 95, revenue: 1425000 },
-        { name: "Sinh tố xoài", quantity: 80, revenue: 1200000 },
-        { name: "Americano", quantity: 65, revenue: 975000 },
-      ];
-
-      // Render biểu đồ cột
-      function renderTopProductsChart() {
-        const ctx = document
-          .getElementById("topProductsChart")
-          .getContext("2d");
-        new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: demoTopProducts.map((item) => item.name),
-            datasets: [
-              {
-                label: "Số lượng bán",
-                data: demoTopProducts.map((item) => item.quantity),
-                backgroundColor: "#8d6e63",
-                borderColor: "#6b4e31",
-                borderWidth: 1,
-              },
-              {
-                label: "Doanh thu (triệu VND)",
-                data: demoTopProducts.map((item) => item.revenue / 1000000),
-                backgroundColor: "#d4af37",
-                borderColor: "#b8860b",
-                borderWidth: 1,
-                yAxisID: "y1",
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: {
-                beginAtZero: true,
-                title: { display: true, text: "Số lượng" },
-              },
-              y1: {
-                position: "right",
-                beginAtZero: true,
-                title: { display: true, text: "Doanh thu (triệu)" },
-                grid: { drawOnChartArea: false },
-              },
-            },
-            plugins: {
-              legend: { position: "top" },
-              tooltip: {
-                callbacks: {
-                  label: function (context) {
-                    let label = context.dataset.label || "";
-                    if (label) label += ": ";
-                    if (context.parsed.y !== null) {
-                      label += context.parsed.y;
-                      if (context.dataset.label.includes("Doanh thu"))
-                        label += " triệu";
-                      else label += " ly";
-                    }
-                    return label;
-                  },
-                },
-              },
-            },
-          },
-        });
-
-        // Render list text dự phòng
-        const topList = document.getElementById("topItems");
-        topList.innerHTML = demoTopProducts
-          .map(
-            (item) => `
-        <li style="margin: 8px 0; font-size: 1.1rem;">
-          <strong>${item.name}</strong>: ${item.quantity} ly - ${item.revenue.toLocaleString("vi-VN")}đ
-        </li>
-      `,
-          )
-          .join("");
-      }
-
-      // Giả lập generate report (dùng dữ liệu cứng)
-      function generateReport() {
-        const period = document.getElementById("reportPeriod").value;
-        console.log("Xem báo cáo theo:", period);
-
-        // Giả lập cập nhật số liệu
-        document.getElementById("totalRevenue").textContent = "45.680.000đ";
-        document.getElementById("orderCount").textContent = "128";
-        document.getElementById("avgOrder").textContent = "356.875đ";
-
-        // Render biểu đồ
-        renderTopProductsChart();
-      }
-
-      // Load ban đầu
-      document.addEventListener("DOMContentLoaded", () => {
-        generateReport(); // Demo ngay khi load
-      });
-    </script>
+    <script src="./js/report.js"></script>
   </body>
 </html>
