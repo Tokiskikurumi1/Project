@@ -50,7 +50,7 @@ async function filterBills() {
 function resetFilter() {
   document.getElementById("fromDate").value = "";
   document.getElementById("toDate").value = "";
-  document.getElementById("reportPeriod").value = "MONTH";
+  document.getElementById("reportPeriod").value = "ALL";
 
   generateReport();
 }
@@ -120,16 +120,35 @@ async function loadTopProductType(type) {
 }
 
 function renderProductChart(data) {
-  if (!data) return;
+  const canvas = document.getElementById("topProductsChart");
+  const container = canvas.parentElement;
+
+  // nếu chưa có message element thì tạo
+  let msg = container.querySelector(".no-data");
+  if (!msg) {
+    msg = document.createElement("p");
+    msg.className = "no-data";
+    msg.style.textAlign = "center";
+    msg.style.color = "#888";
+    msg.innerText = "Chưa có doanh thu";
+    container.appendChild(msg);
+  }
+
+  if (!data || data.length === 0) {
+    canvas.style.display = "none";
+    msg.style.display = "block";
+    return;
+  }
+
+  msg.style.display = "none";
+  canvas.style.display = "block";
 
   const labels = data.map((x) => x.coffeeName);
   const values = data.map((x) => x.totalQuantity);
 
-  const ctx = document.getElementById("topProductsChart");
-
   if (productChart) productChart.destroy();
 
-  productChart = new Chart(ctx, {
+  productChart = new Chart(canvas, {
     type: "bar",
     data: {
       labels: labels,
@@ -142,10 +161,21 @@ function renderProductChart(data) {
       ],
     },
     options: {
-      responsive: true,
       plugins: {
-        legend: {
-          display: true,
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const index = context.dataIndex;
+
+              const quantity = data[index].totalQuantity;
+              const revenue = data[index].revenue;
+
+              return [
+                "Số lượng: " + quantity,
+                "Doanh thu: " + revenue.toLocaleString("vi-VN") + "đ",
+              ];
+            },
+          },
         },
       },
     },
@@ -179,27 +209,40 @@ async function loadCategoryType(type) {
 }
 
 function renderCategoryChart(data) {
+  const canvas = document.getElementById("categoryChart");
+  const container = canvas.parentElement;
+
+  let msg = container.querySelector(".no-data");
+  if (!msg) {
+    msg = document.createElement("p");
+    msg.className = "no-data";
+    msg.style.textAlign = "center";
+    msg.style.color = "#888";
+    msg.innerText = "Chưa có doanh thu";
+    container.appendChild(msg);
+  }
+
+  if (!data || data.length === 0) {
+    canvas.style.display = "none";
+    msg.style.display = "block";
+    return;
+  }
+
+  msg.style.display = "none";
+  canvas.style.display = "block";
+
   const labels = data.map((x) => x.categoryName);
   const values = data.map((x) => x.revenue);
 
-  const ctx = document.getElementById("categoryChart");
-
   if (categoryChart) categoryChart.destroy();
 
-  categoryChart = new Chart(ctx, {
+  categoryChart = new Chart(canvas, {
     type: "pie",
     data: {
       labels: labels,
       datasets: [
         {
           data: values,
-          backgroundColor: [
-            "#6b4e31",
-            "#a1887f",
-            "#d7ccc8",
-            "#8d6e63",
-            "#bcaaa4",
-          ],
         },
       ],
     },
@@ -234,6 +277,18 @@ async function loadCustomerType(type) {
 
 function renderCustomer(data) {
   const tbody = document.getElementById("topCustomers");
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="3" style="text-align:center;color:#888;padding:20px">
+          Chưa có doanh thu
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
   tbody.innerHTML = "";
 
   data.forEach((c) => {
@@ -241,7 +296,7 @@ function renderCustomer(data) {
       <tr>
         <td style="padding:10px">${c.fullName}</td>
         <td style="padding:10px">${c.totalBills}</td>
-        <td style="padding:10px">${formatMoney(c.totalSpent)}</td>
+        <td style="padding:10px">${c.totalSpent.toLocaleString("vi-VN")}đ</td>
       </tr>
     `;
 
