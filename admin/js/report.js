@@ -1,158 +1,250 @@
-const API_BASE = "https://localhost:7114/api/ManageDashboard";
+const API = "https://localhost:7114/api/ManageReport";
 
 let productChart = null;
 let categoryChart = null;
-let revenueChart = null;
 
-function formatVND(num) {
+// ================= LOAD DEFAULT =================
+document.addEventListener("DOMContentLoaded", () => {
+  generateReport();
+});
+
+// ================= FORMAT MONEY =================
+function formatMoney(num) {
   return num.toLocaleString("vi-VN") + "đ";
 }
 
+// ================= LOAD REPORT =================
 async function generateReport() {
-  try {
-    const from = document.getElementById("fromDate").value;
-    const to = document.getElementById("toDate").value;
+  const type = document.getElementById("reportPeriod").value;
 
-    const query = `?fromDate=${from}&toDate=${to}`;
-
-    const [summaryRes, revenueRes, categoryRes, productRes, customerRes] =
-      await Promise.all([
-        fetch(`${API_BASE}/summary${query}`),
-        fetch(`${API_BASE}/revenue-chart${query}`),
-        fetch(`${API_BASE}/revenue-category${query}`),
-        fetch(`${API_BASE}/top-products${query}`),
-        fetch(`${API_BASE}/top-customers${query}`),
-      ]);
-
-    const summary = await summaryRes.json();
-    const revenueData = await revenueRes.json();
-    const categoryData = await categoryRes.json();
-    const productData = await productRes.json();
-    const customerData = await customerRes.json();
-
-    renderSummary(summary);
-    renderRevenueChart(revenueData);
-    renderCategoryChart(categoryData);
-    renderTopProducts(productData);
-    renderTopCustomers(customerData);
-  } catch (err) {
-    console.error("Dashboard error:", err);
+  if (type === "ALL") {
+    loadSummaryAll();
+    loadTopProductAll();
+    loadCategoryAll();
+    loadCustomerAll();
+  } else {
+    loadSummaryType(type);
+    loadTopProductType(type);
+    loadCategoryType(type);
+    loadCustomerType(type);
   }
 }
 
+// ================= FILTER DATE =================
+async function filterBills() {
+  const from = document.getElementById("fromDate").value;
+  const to = document.getElementById("toDate").value;
+
+  if (!from || !to) {
+    alert("Vui lòng chọn ngày");
+    return;
+  }
+
+  loadSummaryDate(from, to);
+  loadTopProductDate(from, to);
+  loadCategoryDate(from, to);
+  loadCustomerDate(from, to);
+}
+
+// ================= RESET =================
+function resetFilter() {
+  document.getElementById("fromDate").value = "";
+  document.getElementById("toDate").value = "";
+  document.getElementById("reportPeriod").value = "MONTH";
+
+  generateReport();
+}
+
+//
+// =================================================
+// ================= SUMMARY =======================
+// =================================================
+//
+
+async function loadSummaryAll() {
+  const res = await fetch(`${API}/get-all-summary`);
+  const data = await res.json();
+  renderSummary(data);
+}
+
+async function loadSummaryDate(from, to) {
+  const res = await fetch(`${API}/get-summary-by-date?from=${from}&to=${to}`);
+  const data = await res.json();
+  renderSummary(data);
+}
+
+async function loadSummaryType(type) {
+  const res = await fetch(`${API}/get-summary-by-type?type=${type}`);
+  const data = await res.json();
+  renderSummary(data);
+}
+
 function renderSummary(data) {
-  document.getElementById("totalRevenue").textContent = formatVND(
-    data.totalRevenue,
+  if (!data || data.length === 0) return;
+
+  const summary = data[0];
+
+  const revenue = summary.totalRevenue || 0;
+  const orders = summary.totalBills || 0;
+  const avg = summary.avgPerBill || 0;
+
+  document.getElementById("totalRevenue").innerText = formatMoney(revenue);
+  document.getElementById("orderCount").innerText = orders;
+  document.getElementById("avgOrder").innerText = formatMoney(avg);
+}
+
+//
+// =================================================
+// ================= TOP PRODUCT ===================
+// =================================================
+//
+
+async function loadTopProductAll() {
+  const res = await fetch(`${API}/get-top-produc-all`);
+  const data = await res.json();
+  renderProductChart(data);
+}
+
+async function loadTopProductDate(from, to) {
+  const res = await fetch(
+    `${API}/get-top-product-by-date?from=${from}&to=${to}`,
   );
-
-  document.getElementById("orderCount").textContent = data.totalOrders;
-
-  document.getElementById("avgOrder").textContent = formatVND(
-    data.avgOrderValue,
-  );
+  const data = await res.json();
+  renderProductChart(data);
 }
 
-function renderRevenueChart(data) {
-  const ctx = document.getElementById("revenueChart").getContext("2d");
-
-  if (revenueChart) revenueChart.destroy();
-
-  revenueChart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: data.map((x) => x.day),
-      datasets: [
-        {
-          label: "Doanh thu",
-          data: data.map((x) => x.revenue),
-          borderColor: "#6b4e31",
-          backgroundColor: "rgba(107,78,49,0.2)",
-          tension: 0.4,
-          fill: true,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: "bottom" },
-      },
-    },
-  });
+async function loadTopProductType(type) {
+  const res = await fetch(`${API}/get-top-products-by-type?type=${type}`);
+  const data = await res.json();
+  renderProductChart(data);
 }
 
-function renderCategoryChart(data) {
-  const ctx = document.getElementById("categoryChart").getContext("2d");
+function renderProductChart(data) {
+  if (!data) return;
 
-  if (categoryChart) categoryChart.destroy();
+  const labels = data.map((x) => x.coffeeName);
+  const values = data.map((x) => x.totalQuantity);
 
-  categoryChart = new Chart(ctx, {
-    type: "pie",
-    data: {
-      labels: data.map((x) => x.categoryName),
-      datasets: [
-        {
-          data: data.map((x) => x.revenue),
-          backgroundColor: [
-            "#8d6e63",
-            "#d4af37",
-            "#81c784",
-            "#64b5f6",
-            "#ff8a65",
-          ],
-        },
-      ],
-    },
-    options: {
-      plugins: {
-        legend: { position: "bottom" },
-      },
-    },
-  });
-}
-
-function renderTopProducts(data) {
-  const ctx = document.getElementById("topProductsChart").getContext("2d");
+  const ctx = document.getElementById("topProductsChart");
 
   if (productChart) productChart.destroy();
 
   productChart = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: data.map((x) => x.productName),
+      labels: labels,
       datasets: [
         {
           label: "Số lượng bán",
-          data: data.map((x) => x.quantity),
-          backgroundColor: "#8d6e63",
+          data: values,
+          backgroundColor: "#6b4e31",
         },
       ],
     },
     options: {
       responsive: true,
       plugins: {
-        legend: { position: "top" },
+        legend: {
+          display: true,
+        },
       },
     },
   });
 }
 
-function renderTopCustomers(data) {
-  const tbody = document.getElementById("topCustomers");
+//
+// =================================================
+// ================= CATEGORY ======================
+// =================================================
+//
 
-  tbody.innerHTML = data
-    .map(
-      (c) => `
-      <tr style="border-bottom:1px solid #eee">
-        <td style="padding:12px">${c.fullName}</td>
-        <td style="padding:12px">${c.totalBills}</td>
-        <td style="padding:12px">${formatVND(c.totalSpent)}</td>
-      </tr>
-  `,
-    )
-    .join("");
+async function loadCategoryAll() {
+  const res = await fetch(`${API}/get-top-category-all`);
+  const data = await res.json();
+  renderCategoryChart(data);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  generateReport();
-});
+async function loadCategoryDate(from, to) {
+  const res = await fetch(
+    `${API}/get-top-category-by-date?from=${from}&to=${to}`,
+  );
+  const data = await res.json();
+  renderCategoryChart(data);
+}
+
+async function loadCategoryType(type) {
+  const res = await fetch(`${API}/get-top-category-by-type?type=${type}`);
+  const data = await res.json();
+  renderCategoryChart(data);
+}
+
+function renderCategoryChart(data) {
+  const labels = data.map((x) => x.categoryName);
+  const values = data.map((x) => x.revenue);
+
+  const ctx = document.getElementById("categoryChart");
+
+  if (categoryChart) categoryChart.destroy();
+
+  categoryChart = new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          data: values,
+          backgroundColor: [
+            "#6b4e31",
+            "#a1887f",
+            "#d7ccc8",
+            "#8d6e63",
+            "#bcaaa4",
+          ],
+        },
+      ],
+    },
+  });
+}
+
+//
+// =================================================
+// ================= CUSTOMER ======================
+// =================================================
+//
+
+async function loadCustomerAll() {
+  const res = await fetch(`${API}/get-top-customer-all`);
+  const data = await res.json();
+  renderCustomer(data);
+}
+
+async function loadCustomerDate(from, to) {
+  const res = await fetch(
+    `${API}/get-top-customer-by-date?from=${from}&to=${to}`,
+  );
+  const data = await res.json();
+  renderCustomer(data);
+}
+
+async function loadCustomerType(type) {
+  const res = await fetch(`${API}/get-top-customer-by-type?type=${type}`);
+  const data = await res.json();
+  renderCustomer(data);
+}
+
+function renderCustomer(data) {
+  const tbody = document.getElementById("topCustomers");
+  tbody.innerHTML = "";
+
+  data.forEach((c) => {
+    const row = `
+      <tr>
+        <td style="padding:10px">${c.fullName}</td>
+        <td style="padding:10px">${c.totalBills}</td>
+        <td style="padding:10px">${formatMoney(c.totalSpent)}</td>
+      </tr>
+    `;
+
+    tbody.innerHTML += row;
+  });
+}
