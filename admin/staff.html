@@ -33,18 +33,98 @@
         <section class="staff-card">
           <h2><i class="fas fa-user-tie"></i> Quản lý nhân viên</h2>
 
-          <!-- Nút thêm nhân viên -->
-          <button class="btn-primary" onclick="showAddStaffModal()">
-            <i class="fas fa-plus"></i> Thêm nhân viên
-          </button>
+          <form id="addStaffForm" class="staff-form">
+            <!-- Tên nhân viên -->
+            <div class="form-staff-group">
+              <label for="staffName">Tên nhân viên</label>
+              <input
+                type="text"
+                id="staffName"
+                placeholder="Ví dụ: Nguyễn Văn A"
+                required
+              />
+            </div>
 
+            <!-- Giới tính -->
+            <div class="form-staff-group">
+              <label for="staffGender">Giới tính</label>
+              <select id="staffGender" required>
+                <option value="" disabled selected>Chọn giới tính</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+              </select>
+            </div>
+
+            <!-- SĐT -->
+            <div class="form-staff-group">
+              <label for="staffPhone">Số điện thoại</label>
+              <input
+                type="tel"
+                id="staffPhone"
+                placeholder="0123456789"
+                required
+              />
+            </div>
+
+            <!-- Email -->
+            <div class="form-staff-group">
+              <label for="staffEmail">Email</label>
+              <input
+                type="email"
+                id="staffEmail"
+                placeholder="example@gmail.com"
+                required
+              />
+            </div>
+
+            <!-- Địa chỉ -->
+            <div class="form-staff-group">
+              <label for="staffAddress">Địa chỉ</label>
+              <input
+                type="text"
+                id="staffAddress"
+                placeholder="Hà Nội"
+                required
+              />
+            </div>
+
+            <!-- Tài khoản -->
+            <div class="form-staff-group">
+              <label for="staffUsername">Tài khoản</label>
+              <input
+                type="text"
+                id="staffUsername"
+                placeholder="staff01"
+                required
+              />
+            </div>
+
+            <!-- Mật khẩu -->
+            <div class="form-staff-group">
+              <label for="staffPassword">Mật khẩu</label>
+              <input
+                type="password"
+                id="staffPassword"
+                placeholder="******"
+                required
+              />
+            </div>
+
+            <button type="button" class="btn-primary" onclick="addStaff()">
+              <i class="fas fa-user-plus"></i> Thêm nhân viên
+            </button>
+          </form>
+
+          
+        </section>
+        <section class="staff-list">
           <div class="table-container">
             <table class="staff-table">
               <thead>
                 <tr>
                   <th>STT</th>
                   <th>Tên nhân viên</th>
-                  <th>SĐT</th>
+                  <th>Giới tính</th>
                   <th>Chức vụ</th>
                   <th>Ca làm việc</th>
                   <th>Lương cơ bản</th>

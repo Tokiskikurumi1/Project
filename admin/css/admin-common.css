@@ -23,6 +23,7 @@ body {
 
 /* Card chung cho tất cả trang */
 .staff-card,
+.staff-list,
 .report-card,
 .inventory-card,
 .promotion-card,
@@ -162,6 +163,16 @@ tbody tr:hover {
 }
 
 /* Form chung */
+.staff-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.form-staff-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 .product-form,
 .form-group {
   display: grid;
