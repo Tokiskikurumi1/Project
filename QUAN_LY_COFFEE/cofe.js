@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (currentUser) {
       loginTable.innerHTML = `
-    <span>Chào mừng: ${currentUser} | <a href="#" id="logout">Đăng xuất</a></span>
+    <span>Chào mừng: <a href="./QUAN_LY_COFFEE/web_children/profile.html">${currentUser}</a> | <a href="#" id="logout">Đăng xuất</a></span>
   `;
       const logoutButton = document.getElementById("logout");
       if (logoutButton) {

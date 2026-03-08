@@ -114,8 +114,6 @@
               <i class="fas fa-user-plus"></i> Thêm nhân viên
             </button>
           </form>
-
-          
         </section>
         <section class="staff-list">
           <div class="table-container">
@@ -125,51 +123,100 @@
                   <th>STT</th>
                   <th>Tên nhân viên</th>
                   <th>Giới tính</th>
-                  <th>Chức vụ</th>
-                  <th>Ca làm việc</th>
-                  <th>Lương cơ bản</th>
+                  <th>Địa chỉ</th>
+                  <th>Số điện thoại</th>
+                  <th>Email</th>
+                  <th>Ngày tạo</th>
                   <th>Trạng thái</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
-              <tbody id="staff-list">
-                <!-- JS render -->
-              </tbody>
+              <tbody id="staff-list"></tbody>
             </table>
           </div>
         </section>
       </main>
 
-      <!-- Modal thêm/sửa nhân viên -->
+      <!-- Modal sửa nhân viên -->
       <div id="staffModal" class="modal">
         <div class="modal-content">
           <span class="close-btn" onclick="closeStaffModal()">&times;</span>
-          <h2><i class="fas fa-user-plus"></i> Thêm / Sửa nhân viên</h2>
-          <form class="product-form">
+          <h2><i class="fas fa-user-plus"></i> Sửa nhân viên</h2>
+          <form class="staff-form">
+            <input type="hidden" id="editId" />
             <div class="form-group">
-              <label>Tên nhân viên</label>
-              <input type="text" id="staffName" required />
+              <label for="editName">Tên nhân viên</label>
+              <input
+                type="text"
+                id="editName"
+                placeholder="Ví dụ: Nguyễn Văn A"
+                required
+              />
             </div>
+
+            <!-- Giới tính -->
             <div class="form-group">
-              <label>SĐT</label>
-              <input type="tel" id="staffPhone" required />
-            </div>
-            <div class="form-group">
-              <label>Chức vụ</label>
-              <select id="staffRole">
-                <option value="Phục vụ">Phục vụ</option>
-                <option value="Pha chế">Pha chế</option>
-                <option value="Thu ngân">Thu ngân</option>
-                <option value="Quản lý">Quản lý</option>
+              <label for="editGen">Giới tính</label>
+              <select id="editGen" required>
+                <option value="" disabled selected>Chọn giới tính</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
               </select>
             </div>
+
+            <!-- SĐT -->
             <div class="form-group">
-              <label>Ca làm việc</label>
-              <input type="text" id="staffShift" placeholder="Sáng/Chiều/Tối" />
+              <label for="editPhone">Số điện thoại</label>
+              <input
+                type="tel"
+                id="editPhone"
+                placeholder="0123456789"
+                required
+              />
             </div>
+
+            <!-- Email -->
             <div class="form-group">
-              <label>Lương cơ bản (VND)</label>
-              <input type="number" id="staffSalary" />
+              <label for="editEmail">Email</label>
+              <input
+                type="email"
+                id="editEmail"
+                placeholder="example@gmail.com"
+                required
+              />
+            </div>
+
+            <!-- Địa chỉ -->
+            <div class="form-group">
+              <label for="editAddress">Địa chỉ</label>
+              <input
+                type="text"
+                id="editAddress"
+                placeholder="Hà Nội"
+                required
+              />
+            </div>
+
+            <!-- Tài khoản -->
+            <div class="form-group">
+              <label for="editUsername">Tài khoản</label>
+              <input
+                type="text"
+                id="editUsername"
+                placeholder="staff01"
+                required
+              />
+            </div>
+
+            <!-- Mật khẩu -->
+            <div class="form-group">
+              <label for="editPassword">Mật khẩu</label>
+              <input
+                type="password"
+                id="editPassword"
+                placeholder="******"
+                required
+              />
             </div>
             <div class="modal-actions">
               <button
@@ -187,7 +234,7 @@
         </div>
       </div>
     </div>
-    <script src="./js/Main_ad.js"></script>
+    <script src="./js/staff.js"></script>
     <script src="./js/header_siderbar.js"></script>
   </body>
 </html>

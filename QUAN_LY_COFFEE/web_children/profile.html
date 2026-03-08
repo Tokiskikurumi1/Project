@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./css/coffees.css" />
+    <title>Sản Phẩm-Coffee Shop</title>
+    <style>
+      a,
+      span {
+        text-decoration: none;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main-header"></div>
+    <!-- CONTAINER -->
+    <div class="container">
+      <!-- Nút toggle sidebar trên mobile -->
+      <button
+        class="sidebar-toggle"
+        onclick="document.querySelector('.sidebar').classList.toggle('active')"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <div>
+        <!-- Sidebar trái -->
+        <div class="container-profile">
+          <section class="sidebar">
+            <div class="sidebar-header">
+              <div class="avatar">
+                <img
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80"
+                  alt="Avatar"
+                />
+              </div>
+              <h2 class="sidebar-name">Nguyễn Văn A</h2>
+              <p class="sidebar-points">
+                <i class="fas fa-star"></i> 1.250 điểm tích lũy
+              </p>
+            </div>
+
+            <ul class="sidebar-menu">
+              <li>
+                <a href="#" class="active"
+                  ><i class="fas fa-user-circle"></i> Thông tin cá nhân</a
+                >
+              </li>
+              <li>
+                <a href="#" onclick="showOrders()"
+                  ><i class="fas fa-receipt"></i> Hóa đơn của tôi</a
+                >
+              </li>
+              <li>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+              </li>
+            </ul>
+          </section>
+          <div class="overlay"></div>
+          <!-- Nội dung bên phải -->
+          <main class="main-content">
+            <!-- Thông tin cá nhân (mặc định) -->
+            <div id="profile-info" class="profile-card">
+              <h2><i class="fas fa-user-circle"></i> Thông tin cá nhân</h2>
+              <div class="info-grid">
+                <div class="info-item">
+                  <i class="fas fa-user"></i>
+                  <span>Họ tên: Nguyễn Văn A</span>
+                </div>
+                <div class="info-item">
+                  <i class="fas fa-envelope"></i>
+                  <span>Email: vana@gmail.com</span>
+                </div>
+                <div class="info-item">
+                  <i class="fas fa-phone"></i>
+                  <span>SĐT: 0903 123 456</span>
+                </div>
+                <div class="info-item">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>Địa chỉ: 123 Đường Lê Lợi, Quận 1, TP.HCM</span>
+                </div>
+                <div class="info-item">
+                  <i class="fas fa-calendar-alt"></i>
+                  <span>Ngày tham gia: 15/03/2025</span>
+                </div>
+              </div>
+              <button class="btn">
+                <i class="fas fa-edit"></i> Chỉnh sửa thông tin
+              </button>
+            </div>
+
+            <!-- Danh sách hóa đơn (ẩn mặc định) -->
+            <div id="orders-section" class="profile-card" style="display: none">
+              <h2><i class="fas fa-receipt"></i> Hóa đơn của tôi</h2>
+
+              <!-- Tab trạng thái -->
+              <div class="tab-bar">
+                <div class="tab active" onclick="filterOrders('all')">
+                  Tất cả
+                </div>
+                <div class="tab" onclick="filterOrders('pending')">
+                  Chờ xác nhận
+                </div>
+                <div class="tab" onclick="filterOrders('shipping')">
+                  Chờ giao hàng
+                </div>
+                <div class="tab" onclick="filterOrders('delivered')">
+                  Đã giao
+                </div>
+                <div class="tab" onclick="filterOrders('cancelled')">
+                  Đã hủy
+                </div>
+              </div>
+
+              <!-- Danh sách hóa đơn -->
+              <div id="order-list">
+                <!-- Hóa đơn sẽ được render ở đây qua JS -->
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+    <!-- FOOTER -->
+    <div id="main-footer"></div>
+    <!--  -->
+    <script src="./js/header.js"></script>
+    <script src="./js/profile.js"></script>
+  </body>
+</html>
