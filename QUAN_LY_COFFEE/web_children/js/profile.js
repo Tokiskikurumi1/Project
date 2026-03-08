@@ -126,6 +126,15 @@ function showOrders() {
   document.querySelector('.sidebar-menu a[href="#"]').classList.add("active");
   renderOrders("all");
 }
+function showProfile() {
+  document.getElementById("profile-info").style.display = "block";
+  document.getElementById("orders-section").style.display = "none";
 
+  document
+    .querySelectorAll(".sidebar-menu a")
+    .forEach((a) => a.classList.remove("active"));
+
+  document.querySelector(".sidebar-menu a:first-child").classList.add("active");
+}
 // Mặc định hiển thị Thông tin cá nhân
 document.getElementById("profile-info").style.display = "block";

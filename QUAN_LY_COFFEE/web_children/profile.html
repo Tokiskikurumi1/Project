@@ -45,7 +45,7 @@
 
             <ul class="sidebar-menu">
               <li>
-                <a href="#" class="active"
+                <a href="#" class="active" onclick="showProfile()"
                   ><i class="fas fa-user-circle"></i> Thông tin cá nhân</a
                 >
               </li>
@@ -65,31 +65,84 @@
             <!-- Thông tin cá nhân (mặc định) -->
             <div id="profile-info" class="profile-card">
               <h2><i class="fas fa-user-circle"></i> Thông tin cá nhân</h2>
-              <div class="info-grid">
-                <div class="info-item">
-                  <i class="fas fa-user"></i>
-                  <span>Họ tên: Nguyễn Văn A</span>
+
+              <div class="profile-layout">
+                <!-- LEFT INFO -->
+                <div class="profile-left">
+                  <div class="info-grid">
+                    <div class="info-item">
+                      <i class="fas fa-user"></i>
+                      <input
+                        type="text"
+                        id="userName"
+                        placeholder="Họ và tên"
+                      />
+                    </div>
+
+                    <div class="info-item">
+                      <i class="fas fa-venus-mars"></i>
+                      <select id="userGender">
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                        <option value="other">Khác</option>
+                      </select>
+                    </div>
+
+                    <div class="info-item">
+                      <i class="fas fa-envelope"></i>
+                      <input type="email" id="userEmail" placeholder="Email" />
+                    </div>
+
+                    <div class="info-item">
+                      <i class="fas fa-phone"></i>
+                      <input
+                        type="text"
+                        id="userPhone"
+                        placeholder="Số điện thoại"
+                      />
+                    </div>
+
+                    <div class="info-item">
+                      <i class="fas fa-map-marker-alt"></i>
+                      <input
+                        type="text"
+                        id="userAddress"
+                        placeholder="Địa chỉ"
+                      />
+                    </div>
+
+                    <div class="info-item">
+                      <i class="fas fa-lock"></i>
+                      <input
+                        type="password"
+                        id="Password"
+                        placeholder="Mật khẩu"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div class="info-item">
-                  <i class="fas fa-envelope"></i>
-                  <span>Email: vana@gmail.com</span>
-                </div>
-                <div class="info-item">
-                  <i class="fas fa-phone"></i>
-                  <span>SĐT: 0903 123 456</span>
-                </div>
-                <div class="info-item">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>Địa chỉ: 123 Đường Lê Lợi, Quận 1, TP.HCM</span>
-                </div>
-                <div class="info-item">
-                  <i class="fas fa-calendar-alt"></i>
-                  <span>Ngày tham gia: 15/03/2025</span>
+
+                <!-- RIGHT IMAGE -->
+                <div class="profile-right">
+                  <img
+                    id="previewAvatar"
+                    src="https://i.pravatar.cc/200"
+                    alt="Avatar"
+                  />
+
+                  <input type="file" id="uploadAvatar" hidden />
+
+                  <label for="uploadAvatar" class="choose-img">
+                    Chọn ảnh
+                  </label>
                 </div>
               </div>
-              <button class="btn">
-                <i class="fas fa-edit"></i> Chỉnh sửa thông tin
-              </button>
+
+              <div class="profile-save">
+                <button class="btn">
+                  <i class="fas fa-save"></i> Lưu thay đổi
+                </button>
+              </div>
             </div>
 
             <!-- Danh sách hóa đơn (ẩn mặc định) -->
