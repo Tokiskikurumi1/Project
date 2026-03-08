@@ -28,29 +28,32 @@ const orders = [
     items: "Sinh tố dâu x2",
   },
 ];
+document.addEventListener("DOMContentLoaded", () => {
+  const menuIcon = document.querySelector(".sidebar-toggle");
+  const sidebar = document.querySelector(".sidebar");
+  const overlay = document.querySelector(".overlay");
+  const sidebarLinks = document.querySelectorAll(".sidebar a");
 
-const menuIcon = document.querySelector(".sidebar-toggle");
-const sidebar = document.querySelector(".sidebar");
-const overlay = document.querySelector(".overlay");
-const sidebarLinks = document.querySelectorAll(".sidebar a");
+  // mở menu
+  menuIcon.addEventListener("click", () => {
+    sidebar.classList.toggle("active");
+    overlay.classList.toggle("active");
+    document.body.classList.toggle("no-scroll"); // khóa scroll
+  });
 
-// mở menu
-menuIcon.addEventListener("click", () => {
-  sidebar.classList.toggle("active");
-  overlay.classList.toggle("active");
-});
-
-// click overlay -> đóng
-overlay.addEventListener("click", () => {
-  sidebar.classList.remove("active");
-  overlay.classList.remove("active");
-});
-
-// click link sidebar -> đóng
-sidebarLinks.forEach((link) => {
-  link.addEventListener("click", () => {
+  overlay.addEventListener("click", () => {
     sidebar.classList.remove("active");
     overlay.classList.remove("active");
+    document.body.classList.remove("no-scroll"); // mở scroll lại
+  });
+
+  // click link sidebar -> đóng
+  sidebarLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      sidebar.classList.remove("active");
+      overlay.classList.remove("active");
+      document.body.classList.remove("no-scroll"); // mở lại scroll
+    });
   });
 });
 // Hiển thị danh sách hóa đơn
