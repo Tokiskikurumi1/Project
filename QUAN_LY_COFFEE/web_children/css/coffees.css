@@ -826,6 +826,11 @@ h2 {
   font-size: 1.8rem;
 }
 
+.userName,
+.createdAt {
+  color: black;
+}
+
 .tab-bar {
   display: flex;
   overflow-x: auto;

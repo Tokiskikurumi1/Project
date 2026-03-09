@@ -71,13 +71,15 @@
                 <div class="profile-left">
                   <div class="info-grid">
                     <div class="info-item">
-                      <label for="">Tên đăng nhập: </label>
+                      <label for=""
+                        >Tên đăng nhập: <span class="userName"></span
+                      ></label>
                     </div>
                     <div class="info-item">
                       <i class="fas fa-user"></i>
                       <input
                         type="text"
-                        id="userName"
+                        id="fullName"
                         placeholder="Họ và tên"
                       />
                     </div>
@@ -123,7 +125,9 @@
                       />
                     </div>
                     <div class="info-item">
-                      <label for="">Ngày tạo: </label>
+                      <label for=""
+                        >Ngày tạo: <span class="createdAt"></span
+                      ></label>
                     </div>
                   </div>
                 </div>
@@ -157,19 +161,19 @@
 
               <!-- Tab trạng thái -->
               <div class="tab-bar">
-                <div class="tab active" onclick="filterOrders('all')">
+                <div class="tab active" onclick="filterOrders('All')">
                   Tất cả
                 </div>
-                <div class="tab" onclick="filterOrders('pending')">
+                <div class="tab" onclick="filterOrders('Pending')">
                   Chờ xác nhận
                 </div>
-                <div class="tab" onclick="filterOrders('shipping')">
+                <div class="tab" onclick="filterOrders('Shipping')">
                   Chờ giao hàng
                 </div>
-                <div class="tab" onclick="filterOrders('delivered')">
+                <div class="tab" onclick="filterOrders('Delivered')">
                   Đã giao
                 </div>
-                <div class="tab" onclick="filterOrders('cancelled')">
+                <div class="tab" onclick="filterOrders('Cancelled')">
                   Đã hủy
                 </div>
               </div>
