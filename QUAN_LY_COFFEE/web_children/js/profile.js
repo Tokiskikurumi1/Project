@@ -51,9 +51,11 @@ async function loadProfile() {
     if (data.avatar) {
       document.getElementById("previewAvatar").src = BASE_URL + data.avatar;
       avatarUrl = data.avatar;
+      document.querySelector(".img-avt").src = BASE_URL + data.avatar;
     } else {
       document.getElementById("previewAvatar").src = "../image/user.jpg";
       avatarUrl = data.avatar;
+      document.querySelector(".img-avt").src = "../image/user.jpg";
     }
   } catch (err) {
     console.error("Load profile error:", err);
@@ -86,11 +88,12 @@ async function updateProfile() {
     }
 
     const body = {
-      fullName: document.getElementById("userName").value,
+      fullName: document.getElementById("fullName").value,
       gender: document.getElementById("userGender").value,
       email: document.getElementById("userEmail").value,
       phone: document.getElementById("userPhone").value,
       address: document.getElementById("userAddress").value,
+      passwordHash: document.getElementById("Password").value,
       avatar: avatarUrl,
     };
 
@@ -157,51 +160,82 @@ async function renderOrders(status = "All") {
       return;
     }
 
-    data.forEach((o) => {
-      const item = document.createElement("div");
+    // ================= GROUP BILL =================
+    const bills = {};
 
+    data.forEach((item) => {
+      if (!bills[item.billID]) {
+        bills[item.billID] = {
+          billDate: item.billDate,
+          status: item.status,
+          statusName: item.statusName,
+          products: [],
+          total: 0,
+        };
+      }
+
+      bills[item.billID].products.push(item);
+      bills[item.billID].total += item.subTotal;
+    });
+
+    // ================= RENDER =================
+    Object.keys(bills).forEach((billID) => {
+      const bill = bills[billID];
+
+      const item = document.createElement("div");
       item.className = "order-item";
 
-      item.innerHTML = `
-        <div class="order-header">
+      let productsHTML = "";
 
-          <strong>#${o.billID}</strong>
-
-          <span class="order-status status-${o.status}">
-            ${o.statusName}
-          </span>
-
-        </div>
-
-        <p>
-          <small>${formatDate(o.billDate)}</small>
-        </p>
-
+      bill.products.forEach((p) => {
+        productsHTML += `
         <div class="order-product">
 
-          <img src="${BASE_URL + o.imageURL}" width="60"/>
+          <img src="${PRODUCT_URL + p.imageURL}" width="60"/>
 
-          <span>${o.coffeeName} x${o.quantity}</span>
+          <span class="span-bill">${p.coffeeName} x${p.quantity}</span>
 
-        </div>
-
-        <p class="order-total">
-          <strong>${formatMoney(o.subTotal)}</strong>
-        </p>
-
-        ${
-          o.status === 0 || o.status === 1
-            ? `
-        <div class="order-actions">
-
-          <button onclick="cancelOrder(${o.billID})" class="cancel-btn">
-          Hủy đơn
-          </button>
+          <span class="span-bill" style="margin-left:auto">${formatMoney(p.subTotal)}</span>
 
         </div>
-        `
-            : ""
-        }
+        `;
+      });
+
+      item.innerHTML = `
+
+      <div class="order-header">
+
+        <strong>#${billID}</strong>
+
+        <span class="order-status status-${bill.status}">
+          ${bill.statusName}
+        </span>
+
+      </div>
+
+      <p>
+        <small>${formatDate(bill.billDate)}</small>
+      </p>
+
+      ${productsHTML}
+
+      <p class="order-total">
+        <strong>Tổng: ${formatMoney(bill.total)}</strong>
+      </p>
+
+      ${
+        bill.status === 0 || bill.status === 1
+          ? `
+      <div class="order-actions">
+
+        <button onclick="cancelOrder(${billID})" class="cancel-btn">
+        Hủy đơn
+        </button>
+
+      </div>
+      `
+          : ""
+      }
 
       `;
 

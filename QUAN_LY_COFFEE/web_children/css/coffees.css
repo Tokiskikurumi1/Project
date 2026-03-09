@@ -826,9 +826,18 @@ h2 {
   font-size: 1.8rem;
 }
 
+.order-product,
+.order-status,
+span,
 .userName,
-.createdAt {
+.createdAt, .span-bill {
   color: black;
+}
+
+.order-product {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .tab-bar {
