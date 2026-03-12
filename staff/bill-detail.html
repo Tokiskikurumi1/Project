@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chi tiết đơn hàng</title>
+
+    <link rel="stylesheet" href="./css/sidebar.css" />
+    <link rel="stylesheet" href="./css/bill-detail.css" />
+  </head>
+
+  <body>
+    <div id="sidebar"></div>
+
+    <div class="page-content">
+      <h2>Chi tiết đơn hàng</h2>
+
+      <div class="order-detail-card">
+        <p><b>Mã đơn:</b> <span id="orderId"></span></p>
+
+        <p><b>Khách:</b> Nguyễn Văn A</p>
+
+        <p><b>Số điện thoại:</b> 0987654321</p>
+
+        <p><b>Địa chỉ:</b> 123 Nguyễn Trãi, Hà Nội</p>
+
+        <h3>Món:</h3>
+
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>Món</th>
+              <th>Số lượng</th>
+              <th>Giá</th>
+              <th>Thành tiền</th>
+            </tr>
+          </thead>
+
+          <tbody id="productList">
+            <tr>
+              <td>Cà phê sữa</td>
+              <td>2</td>
+              <td>25,000</td>
+              <td>50,000</td>
+            </tr>
+
+            <tr>
+              <td>Bạc xỉu</td>
+              <td>1</td>
+              <td>30,000</td>
+              <td>30,000</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 class="total">Tổng tiền: <span id="totalMoney">80,000</span> đ</h3>
+
+        <p>
+          Trạng thái:
+          <span class="status pending" id="orderStatus">Chờ xác nhận</span>
+        </p>
+
+        <div class="action-buttons" id="actionButtons">
+          <button class="btn-confirm" onclick="confirmOrder()">Xác nhận</button>
+
+          <button class="btn-cancel" onclick="cancelOrder()">Huỷ</button>
+        </div>
+      </div>
+
+      <button onclick="history.back()" class="back-btn">← Quay lại</button>
+    </div>
+
+    <script src="./js/sidebar.js"></script>
+    <script src="./js/bill-detail.js"></script>
+  </body>
+</html>

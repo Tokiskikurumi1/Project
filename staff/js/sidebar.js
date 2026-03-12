@@ -56,3 +56,6 @@ function closeSidebar() {
 
   document.body.style.overflow = "auto";
 }
+function viewDetail(id) {
+  window.location.href = "bill-detail.html?id=" + id;
+}

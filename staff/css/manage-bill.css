@@ -1,51 +1,422 @@
-.status-filter {
-  margin: 20px 0;
-  padding: 8px;
+/* ===== GLOBAL ===== */
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f7f3ef;
+  margin: 0;
+  color: #4e342e;
 }
+
+/* ===== PAGE ===== */
+
+.page-content {
+  padding: 30px 40px;
+}
+
+.page-content h2 {
+  font-family: "Playfair Display", serif;
+
+  color: #5d4037;
+
+  margin-bottom: 25px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ===== FILTER ===== */
+
+.status-filter {
+  padding: 10px 14px;
+
+  border-radius: 8px;
+
+  border: 1px solid #d7b99f;
+
+  background: #fffaf0;
+
+  color: #5d4037;
+
+  margin-bottom: 20px;
+}
+
+/* ===== TABLE ===== */
 
 .bill-table {
   width: 100%;
   border-collapse: collapse;
   background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  table-layout: fixed;
 }
 
-.bill-table th,
-.bill-table td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-}
+/* header */
 
-.status {
-  padding: 5px 10px;
-  border-radius: 5px;
+.bill-table thead {
+  background: #8b5a2b;
   color: white;
 }
 
-.pending {
-  background: #ffc107;
-  color: black;
+.bill-table th {
+  padding: 14px;
+  font-weight: 500;
+  text-align: center;
 }
 
-.processing {
-  background: #0dcaf0;
+/* body */
+
+.bill-table td {
+  padding: 14px;
+  border-bottom: 1px solid #f0e4d7;
+  text-align: center;
+  vertical-align: middle;
 }
 
-.done {
-  background: #198754;
+/* hover */
+
+.bill-table tbody tr {
+  transition: 0.2s;
+  cursor: pointer;
 }
 
-.cancel {
+.bill-table tbody tr:hover {
+  background: #fff7ef;
+}
+
+/* ===== COLUMN WIDTH ===== */
+
+.bill-table th:nth-child(1),
+.bill-table td:nth-child(1) {
+  width: 80px;
+}
+
+.bill-table th:nth-child(2),
+.bill-table td:nth-child(2) {
+  width: 160px;
+}
+
+.bill-table th:nth-child(3),
+.bill-table td:nth-child(3) {
+  width: 150px;
+}
+
+.bill-table th:nth-child(4),
+.bill-table td:nth-child(4) {
+  width: 120px;
+}
+
+.bill-table th:nth-child(5),
+.bill-table td:nth-child(5) {
+  width: 160px;
+}
+
+.bill-table th:nth-child(6),
+.bill-table td:nth-child(6) {
+  width: 180px;
+}
+
+/* ===== ACTION BUTTONS ===== */
+
+.bill-table td:last-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.bill-table button {
+  border: none;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.bill-table button:first-child {
+  background: #8b5a2b;
+  color: white;
+}
+
+.bill-table button:first-child:hover {
+  background: #a0784a;
+}
+
+.bill-table button:last-child {
   background: #dc3545;
+  color: white;
 }
+
+.bill-table button:last-child:hover {
+  background: #b02a37;
+}
+/* ===== TOAST ===== */
+
 .order-toast {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #198754;
+
+  top: 25px;
+  right: 25px;
+
+  background: #5d4037;
+
   color: white;
-  padding: 15px 25px;
+
+  padding: 14px 22px;
+
   border-radius: 8px;
+
   display: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+
+  font-size: 14px;
+
+  z-index: 1000;
+}
+
+/* ===== MODAL ===== */
+
+.bill-modal {
+  display: none;
+
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.5);
+
+  justify-content: center;
+  align-items: center;
+
   z-index: 999;
+}
+
+/* modal card */
+
+.bill-modal-content {
+  background: #fff;
+
+  padding: 28px;
+
+  border-radius: 12px;
+
+  width: 650px;
+
+  max-width: 92%;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+  animation: fadeIn 0.2s;
+}
+
+/* modal animation */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-modal {
+  float: right;
+
+  font-size: 24px;
+
+  cursor: pointer;
+
+  color: #888;
+}
+
+.close-modal:hover {
+  color: #000;
+}
+
+/* ===== DETAIL INFO ===== */
+
+.detail-info {
+  margin-bottom: 15px;
+
+  line-height: 1.8;
+}
+
+/* ===== DETAIL TABLE ===== */
+.detail-table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.detail-table th {
+  background: #f5ebe0;
+  padding: 10px;
+  text-align: center;
+}
+
+.detail-table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  vertical-align: middle;
+}
+/* ===== TOTAL ===== */
+
+.detail-total {
+  margin-top: 15px;
+
+  font-weight: 600;
+
+  color: #8b5a2b;
+}
+
+/* ===== ACTION BUTTONS ===== */
+
+#detailActions {
+  margin-top: 18px;
+
+  display: flex;
+
+  gap: 10px;
+}
+
+#detailActions button {
+  padding: 10px 16px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+#detailActions button:first-child {
+  background: #8b5a2b;
+
+  color: white;
+}
+
+#detailActions button:last-child {
+  background: #dc3545;
+
+  color: white;
+}
+thead th {
+  text-align: center;
+}
+table th,
+table td {
+  text-align: center;
+  vertical-align: middle;
+}
+/* ===== PAGINATION ===== */
+
+.pagination {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 25px;
+
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  padding: 8px 14px;
+
+  border: none;
+
+  background: #8b5a2b;
+
+  color: white;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background: #5d4037;
+}
+
+.pagination button:disabled {
+  background: #ccc;
+
+  cursor: not-allowed;
+}
+
+/* ===== EXPORT BUTTON ===== */
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.filter-bar input,
+.filter-bar select,
+.filter-bar button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.filter-bar button {
+  background: #2d7ff9;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#receipt {
+  width: 280px;
+  background: white;
+  padding: 15px;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+#receipt table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#receipt th,
+#receipt td {
+  padding: 3px;
+}
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+  .page-content {
+    padding: 20px;
+  }
+
+  .bill-table {
+    font-size: 14px;
+  }
+
+  .bill-table th,
+  .bill-table td {
+    padding: 10px;
+  }
+
+  .bill-modal-content {
+    width: 95%;
+  }
 }
