@@ -1,0 +1,51 @@
+.status-filter {
+  margin: 20px 0;
+  padding: 8px;
+}
+
+.bill-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.bill-table th,
+.bill-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+}
+
+.pending {
+  background: #ffc107;
+  color: black;
+}
+
+.processing {
+  background: #0dcaf0;
+}
+
+.done {
+  background: #198754;
+}
+
+.cancel {
+  background: #dc3545;
+}
+.order-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #198754;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  display: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}

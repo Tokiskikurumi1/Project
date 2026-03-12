@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quản lý hóa đơn</title>
+
+    <link rel="stylesheet" href="./css/sidebar.css" />
+    <link rel="stylesheet" href="./css/manage-bill.css" />
+  </head>
+
+  <body>
+    <div id="sidebar"></div>
+    <div id="orderToast" class="order-toast">Đơn hàng mới vừa được tạo!</div>
+    <div class="page-content">
+      <h2>Quản lý hóa đơn</h2>
+
+      <select id="statusFilter" class="status-filter">
+        <option value="all">Tất cả</option>
+        <option value="pending">Chờ xác nhận</option>
+        <option value="processing">Đang giao</option>
+        <option value="done">Hoàn thành</option>
+        <option value="cancel">Đã hủy</option>
+      </select>
+
+      <table class="bill-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Khách</th>
+            <th>Thời gian</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+
+        <tbody id="billTable">
+          <tr data-status="pending">
+            <td>101</td>
+            <td>Nguyễn Văn A</td>
+            <td>10:30</td>
+
+            <td>
+              <span class="status pending">Chờ xác nhận</span>
+            </td>
+
+            <td>
+              <button onclick="updateStatus(this, 'processing')">
+                Xác nhận
+              </button>
+
+              <button onclick="updateStatus(this, 'done')">Hoàn thành</button>
+
+              <button onclick="updateStatus(this, 'cancel')">Hủy</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="./js/sidebar.js"></script>
+    <script src="./js/manage-bill.js"></script>
+  </body>
+</html>
