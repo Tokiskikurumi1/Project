@@ -26,12 +26,12 @@
 }
 /* MENU TOGGLE */
 
-.menu-toggle {
+/* .menu-toggle {
   display: none;
   font-size: 1.5rem;
   cursor: pointer;
   color: #5d4037;
-}
+} */
 /* FILTER */
 .dashboard-filter {
   margin-bottom: 28px;
@@ -164,9 +164,9 @@
   .chart-area {
     height: 360px;
   }
-  .menu-toggle {
+  /* .menu-toggle {
     display: block;
-  }
+  } */
 }
 /* Responsive nhỏ */
 @media (max-width: 768px) {

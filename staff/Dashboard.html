@@ -3,20 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Coffee Dashboard</title>
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
+
     <link rel="stylesheet" href="./css/sidebar.css" />
     <link rel="stylesheet" href="./css/staff-order.css" />
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Google Font gợi ý (có thể bỏ nếu không muốn tải thêm) -->
+
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Playfair+Display:wght@700&display=swap"
       rel="stylesheet"
     />
   </head>
+
   <body>
     <div id="sidebar"></div>
     <div id="overlay" class="sidebar-overlay"></div>
@@ -25,6 +30,7 @@
       <!-- HEADER -->
       <div class="dashboard-header">
         <i class="fa-solid fa-bars menu-toggle" onclick="toggleSidebar()"></i>
+
         <div class="header-title">
           <i class="fa-solid fa-mug-saucer coffee-icon"></i>
           <h2>Coffee Dashboard</h2>
@@ -39,32 +45,39 @@
           <option value="week">Tuần này</option>
           <option value="month">Tháng này</option>
         </select>
+
         <label>Từ</label>
         <input type="date" id="fromDate" />
+
         <label>Đến</label>
         <input type="date" id="toDate" />
+
         <button onclick="filterDashboard()">
           <i class="fa-solid fa-filter"></i> Lọc
         </button>
       </div>
 
       <!-- CARDS -->
+
       <div class="dashboard-cards">
         <div class="dashboard-card" data-status="total">
           <i class="fa-solid fa-receipt icon"></i>
           <h3 id="totalOrders">10</h3>
           <p>Tất cả đơn</p>
         </div>
+
         <div class="dashboard-card" data-status="pending">
           <i class="fa-solid fa-hourglass-half icon"></i>
           <h3 id="pendingOrders">3</h3>
           <p>Chờ xác nhận</p>
         </div>
+
         <div class="dashboard-card" data-status="processing">
           <i class="fa-solid fa-truck-fast icon"></i>
           <h3 id="processingOrders">4</h3>
           <p>Đang giao</p>
         </div>
+
         <div class="dashboard-card" data-status="done">
           <i class="fa-solid fa-check-circle icon"></i>
           <h3 id="doneOrders">3</h3>
@@ -73,7 +86,7 @@
       </div>
 
       <!-- CHARTS -->
-      <!-- CHARTS -->
+
       <div class="charts-wrapper">
         <div class="chart-card">
           <h3><i class="fa-solid fa-chart-pie"></i> Trạng thái đơn</h3>

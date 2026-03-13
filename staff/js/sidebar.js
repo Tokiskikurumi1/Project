@@ -13,13 +13,13 @@ document.addEventListener("DOMContentLoaded", function () {
 /* ================= */
 
 function toggleSidebar() {
-  let sidebar = document.querySelector(".staff-sidebar");
-  let overlay = document.getElementById("overlay");
+  const sidebar = document.querySelector(".staff-sidebar");
+  const overlay = document.getElementById("overlay");
+
+  if (!sidebar) return;
 
   sidebar.classList.toggle("show");
   overlay.classList.toggle("show");
-
-  /* khóa scroll */
 
   if (sidebar.classList.contains("show")) {
     document.body.style.overflow = "hidden";
@@ -29,18 +29,15 @@ function toggleSidebar() {
 }
 
 /* ================= */
-/* SIDEBAR EVENTS */
+/* EVENTS */
 /* ================= */
 
 function setupSidebarEvents() {
-  let overlay = document.getElementById("overlay");
-  let sidebar = document.querySelector(".staff-sidebar");
+  const overlay = document.getElementById("overlay");
 
-  /* click ngoài -> đóng */
-
-  overlay.addEventListener("click", closeSidebar);
-
-  /* click menu -> đóng */
+  if (overlay) {
+    overlay.addEventListener("click", closeSidebar);
+  }
 
   document.querySelectorAll(".sidebar-link").forEach((link) => {
     link.addEventListener("click", closeSidebar);
@@ -48,14 +45,17 @@ function setupSidebarEvents() {
 }
 
 function closeSidebar() {
-  let sidebar = document.querySelector(".staff-sidebar");
-  let overlay = document.getElementById("overlay");
+  const sidebar = document.querySelector(".staff-sidebar");
+  const overlay = document.getElementById("overlay");
+
+  if (!sidebar) return;
 
   sidebar.classList.remove("show");
   overlay.classList.remove("show");
 
   document.body.style.overflow = "auto";
 }
+
 function viewDetail(id) {
   window.location.href = "bill-detail.html?id=" + id;
 }
