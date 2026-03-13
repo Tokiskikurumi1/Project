@@ -96,72 +96,72 @@ function renderCustomers(customers) {
 }
 
 // ================= VIEW BILL DETAIL =================
-async function viewBill(billID) {
-  if (!billID) {
-    alert("Khách hàng chưa có hóa đơn!");
-    return;
-  }
+// async function viewBill(billID) {
+//   if (!billID) {
+//     alert("Khách hàng chưa có hóa đơn!");
+//     return;
+//   }
 
-  try {
-    const res = await fetch(`${BASE_URL}/ManageCustomer/bill-detail/${billID}`);
+//   try {
+//     const res = await fetch(`${BASE_URL}/ManageCustomer/bill-detail/${billID}`);
 
-    if (!res.ok) throw new Error("Không lấy được chi tiết hóa đơn");
+//     if (!res.ok) throw new Error("Không lấy được chi tiết hóa đơn");
 
-    const data = await res.json();
-    showBillDetail(data);
-  } catch (err) {
-    console.error(err);
-    alert("Lỗi khi tải chi tiết hóa đơn");
-  }
-}
+//     const data = await res.json();
+//     showBillDetail(data);
+//   } catch (err) {
+//     console.error(err);
+//     alert("Lỗi khi tải chi tiết hóa đơn");
+//   }
+// }
 
 // ================= SHOW MODAL =================
-function showBillDetail(details) {
-  if (!details || details.length === 0) return;
+// function showBillDetail(details) {
+//   if (!details || details.length === 0) return;
 
-  const first = details[0];
+//   const first = details[0];
 
-  document.getElementById("detailBillId").innerText = displayValue(
-    first.billID,
-  );
+//   document.getElementById("detailBillId").innerText = displayValue(
+//     first.billID,
+//   );
 
-  document.getElementById("detailDate").innerText = first.billDate
-    ? new Date(first.billDate).toLocaleDateString()
-    : "Chưa cập nhật";
+//   document.getElementById("detailDate").innerText = first.billDate
+//     ? new Date(first.billDate).toLocaleDateString()
+//     : "Chưa cập nhật";
 
-  document.getElementById("detailCustomer").innerText = displayValue(
-    first.fullName,
-  );
+//   document.getElementById("detailCustomer").innerText = displayValue(
+//     first.fullName,
+//   );
 
-  document.getElementById("detailPhone").innerText = displayValue(first.phone);
+//   document.getElementById("detailPhone").innerText = displayValue(first.phone);
 
-  document.getElementById("detailTotal").innerText = first.totalAmount
-    ? first.totalAmount.toLocaleString() + " đ"
-    : "Chưa cập nhật";
+//   document.getElementById("detailTotal").innerText = first.totalAmount
+//     ? first.totalAmount.toLocaleString() + " đ"
+//     : "Chưa cập nhật";
 
-  const tbody = document.getElementById("detailBody");
-  tbody.innerHTML = "";
+//   const tbody = document.getElementById("detailBody");
+//   tbody.innerHTML = "";
 
-  details.forEach((item) => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${displayValue(item.coffeeName)}</td>
-        <td>${displayValue(item.quantity)}</td>
-        <td>${
-          item.unitPrice
-            ? item.unitPrice.toLocaleString() + " đ"
-            : "Chưa cập nhật"
-        }</td>
-      </tr>
-    `;
-  });
+//   details.forEach((item) => {
+//     tbody.innerHTML += `
+//       <tr>
+//         <td>${displayValue(item.coffeeName)}</td>
+//         <td>${displayValue(item.quantity)}</td>
+//         <td>${
+//           item.unitPrice
+//             ? item.unitPrice.toLocaleString() + " đ"
+//             : "Chưa cập nhật"
+//         }</td>
+//       </tr>
+//     `;
+//   });
 
-  document.getElementById("totalAmount").innerText = first.totalAmount
-    ? first.totalAmount.toLocaleString() + " đ"
-    : "Chưa cập nhật";
+//   document.getElementById("totalAmount").innerText = first.totalAmount
+//     ? first.totalAmount.toLocaleString() + " đ"
+//     : "Chưa cập nhật";
 
-  document.getElementById("billDetailModal").style.display = "block";
-}
+//   document.getElementById("billDetailModal").style.display = "block";
+// }
 
 // ================= HIDE MODAL =================
 function hideBillDetailForm() {

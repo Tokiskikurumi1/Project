@@ -58,6 +58,7 @@ function renderBills(bills) {
 async function viewBillDetail(id) {
   try {
     const res = await fetch(`${API_BASE}/get-bill-by-id/${id}`);
+
     if (!res.ok) {
       console.log("API lỗi:", res.status);
       return;
@@ -66,23 +67,31 @@ async function viewBillDetail(id) {
     const data = await res.json();
     console.log("Bill detail:", data);
 
-    if (!data || data.length === 0) {
+    if (!data || !data.products || data.products.length === 0) {
       alert("Không tìm thấy hóa đơn");
       return;
     }
 
-    const bill = data[0];
+    const products = data.products;
+    const logs = data.logs;
+
+    const bill = products[0];
 
     document.getElementById("detailBillId").innerText = bill.billID;
     document.getElementById("detailDate").innerText = formatDate(bill.billDate);
-    document.getElementById("detailCustomer").innerText = bill.fullName;
+    document.getElementById("detailCustomer").innerText = bill.customerName;
     document.getElementById("detailPhone").innerText = bill.phone;
 
     document.getElementById("billDetailModal").classList.add("active");
     document.getElementById("overlay").classList.add("active");
+
+    /* =====================
+       RENDER PRODUCT
+    ===================== */
+    const detailBody = document.getElementById("detailBody");
     detailBody.innerHTML = "";
 
-    data.forEach((item) => {
+    products.forEach((item) => {
       detailBody.innerHTML += `
         <tr>
           <td>${item.coffeeName}</td>
@@ -95,6 +104,26 @@ async function viewBillDetail(id) {
     document.getElementById("totalAmount").innerText = formatMoney(
       bill.totalAmount,
     );
+
+    /* =====================
+       RENDER BILL LOG
+    ===================== */
+    const historyDiv = document.getElementById("billHistory");
+    historyDiv.innerHTML = "";
+
+    if (!logs || logs.length === 0) {
+      historyDiv.innerHTML = "<p>Chưa có lịch sử xử lý</p>";
+    } else {
+      logs.forEach((log) => {
+        historyDiv.innerHTML += `
+          <div class="history-item">
+            <span class="history-time">${formatTime(log.actionTime)}</span>
+            <span class="history-staff">${log.staffName}</span>
+            <span class="history-action">${formatAction(log.actionType)}</span>
+          </div>
+        `;
+      });
+    }
   } catch (err) {
     console.error("Lỗi chi tiết hóa đơn:", err);
   }
@@ -194,4 +223,26 @@ function formatMoney(number) {
 function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString("vi-VN");
+}
+function formatTime(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString("vi-VN", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function formatAction(action) {
+  switch (action) {
+    case "CONFIRM":
+      return "xác nhận đơn";
+    case "SHIPPING":
+      return "đang giao hàng";
+    case "DELIVERED":
+      return "giao thành công";
+    case "CANCEL":
+      return "hủy đơn";
+    default:
+      return action;
+  }
 }

@@ -48,36 +48,38 @@
 
         <button onclick="exportExcel()">Xuất Excel</button>
       </div>
-      <table class="bill-table">
-        <thead>
-          <tr>
-            <th>Mã</th>
-            <th>Khách</th>
-            <th>SĐT</th>
-            <th>Thời gian</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
+      <div class="table-wrapper">
+        <table class="bill-table">
+          <thead>
+            <tr>
+              <th>Mã</th>
+              <th>Khách</th>
+              <th>SĐT</th>
+              <th>Thời gian</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
 
-        <tbody id="billTable">
-          <tr data-status="pending" onclick="openDetail(this)">
-            <td>101</td>
-            <td>Nguyễn Văn A</td>
-            <td>0987123456</td>
-            <td>10:30</td>
+          <tbody id="billTable">
+            <tr data-status="pending" onclick="openDetail(this)">
+              <td>101</td>
+              <td>Nguyễn Văn A</td>
+              <td>0987123456</td>
+              <td>10:30</td>
 
-            <td>
-              <span class="status pending">Chờ xác nhận</span>
-            </td>
+              <td>
+                <span class="status pending">Chờ xác nhận</span>
+              </td>
 
-            <td onclick="event.stopPropagation()">
-              <button onclick="confirmOrder(this)">Xác nhận</button>
-              <button onclick="cancelOrder(this)">Hủy</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <td onclick="event.stopPropagation()">
+                <button onclick="confirmOrder(this)">Xác nhận</button>
+                <button onclick="cancelOrder(this)">Hủy</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div class="pagination" id="pagination"></div>
       <div id="billModal" class="bill-modal">
         <div class="bill-modal-content">

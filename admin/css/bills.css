@@ -260,6 +260,32 @@ h2 {
 .detail-table td {
   text-align: center;
 }
+
+/* history */
+.bill-history {
+  margin-top: 20px;
+}
+
+.history-item {
+  padding: 6px 0;
+  border-bottom: 1px dashed #ddd;
+  font-size: 14px;
+}
+
+.history-time {
+  color: #888;
+  margin-right: 10px;
+}
+
+.history-staff {
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.history-action {
+  color: #444;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .bills-table thead {

@@ -400,6 +400,19 @@ table td {
 #receipt td {
   padding: 3px;
 }
+
+/* ===== TABLE RESPONSIVE ===== */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 1000px) {
+  .bill-table {
+    min-width: 900px;
+  }
+}
 /* ===== RESPONSIVE ===== */
 
 @media (max-width: 768px) {
