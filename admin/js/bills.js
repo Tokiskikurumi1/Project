@@ -24,11 +24,27 @@ async function loadBills() {
 /* ==============================
    RENDER BILL TABLE
 ============================== */
+function getStatusText(status) {
+  switch (status) {
+    case 1:
+      return "Chờ xác nhận";
+    case 2:
+      return "Chờ giao";
+    case 3:
+      return "Đã giao";
+    case 4:
+      return "Đã hủy";
+    default:
+      return "Không xác định";
+  }
+}
+
 function renderBills(bills) {
   const tbody = document.getElementById("bill-list");
   tbody.innerHTML = "";
+
   bills.forEach((bill, index) => {
-    const statusText = bill.status === 1 ? "Đã thanh toán" : "Chưa thanh toán";
+    const statusText = getStatusText(bill.status);
 
     const row = `
       <tr>
@@ -48,10 +64,10 @@ function renderBills(bills) {
         </td>
       </tr>
     `;
+
     tbody.innerHTML += row;
   });
 }
-
 /* ==============================
    VIEW BILL DETAIL
 ============================== */

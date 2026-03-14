@@ -1,453 +1,402 @@
+const API_BASE = "https://localhost:7203/api/ManageBill";
+
+let currentBillId = null;
+let bills = [];
+let filteredBills = [];
+
+let currentPage = 1;
+const pageSize = 10;
+/* ========================= */
+/* TOKEN */
+/* ========================= */
+
+function getToken() {
+  return localStorage.getItem("accessToken");
+}
+
+/* ========================= */
+/* FORMAT PRICE */
+/* ========================= */
+
 function formatPrice(price) {
-  return price.toLocaleString("vi-VN") + "đ";
-}
-
-function confirmOrder(button) {
-  let row = button.closest("tr");
-
-  row.dataset.status = "processing";
-
-  let statusCell = row.querySelector(".status");
-  statusCell.className = "status processing";
-  statusCell.innerText = "Đang giao";
-
-  let actionCell = row.querySelector("td:last-child");
-
-  let id = row.children[0].innerText;
-
-  actionCell.innerHTML = `
-    <button onclick="completeOrder(this)">Đã giao</button>
-    <button onclick="cancelOrder(this)">Hủy</button>
-    <button onclick="exportBillPDF('${id}')">Xuất hóa đơn</button>
-  `;
-}
-
-function completeOrder(button) {
-  let row = button.closest("tr");
-
-  row.dataset.status = "done";
-
-  let statusCell = row.querySelector(".status");
-  statusCell.className = "status done";
-  statusCell.innerText = "Hoàn thành";
-
-  let actionCell = row.querySelector("td:last-child");
-
-  actionCell.innerHTML = "";
-}
-
-function cancelOrder(button) {
-  let row = button.closest("tr");
-
-  row.dataset.status = "cancel";
-
-  let statusCell = row.querySelector(".status");
-  statusCell.className = "status cancel";
-  statusCell.innerText = "Đã hủy";
-
-  let actionCell = row.querySelector("td:last-child");
-
-  actionCell.innerHTML = "";
-}
-/* ========================= */
-/* Toast thông báo đơn mới */
-/* ========================= */
-
-function showToast() {
-  let toast = document.getElementById("orderToast");
-
-  toast.style.display = "block";
-
-  setTimeout(() => {
-    toast.style.display = "none";
-  }, 1000);
+  return Number(price).toLocaleString("vi-VN") + "đ";
 }
 
 /* ========================= */
-/* Tự tạo đơn mới (demo) */
+/* STATUS TEXT */
 /* ========================= */
 
-setInterval(() => {
-  let now = new Date();
-  let table = document.getElementById("billTable");
-
-  let id = Math.floor(Math.random() * 100);
-
-  let phone = "09" + Math.floor(10000000 + Math.random() * 90000000);
-
-  let row = `
-  <tr data-status="pending" data-date="${now.toISOString()}" onclick="openDetail(this)">
-
-  <td>${id}</td>
-
-  <td>Khách mới</td>
-
-  <td>${phone}</td>
-
-  <td>${new Date().toLocaleTimeString()}</td>
-
-  <td>
-  <span class="status pending">Chờ xác nhận</span>
-  </td>
-
-  <td onclick="event.stopPropagation()">
-
-  <button onclick="confirmOrder(this)">Xác nhận</button>
-
-  <button onclick="cancelOrder(this)">Hủy</button>
-
-  </td>
-
-  </tr>
-  `;
-
-  table.insertAdjacentHTML("afterbegin", row);
-
-  paginateTable();
-
-  showToast();
-}, 10000);
-document.getElementById("statusFilter").addEventListener("change", function () {
-  let filter = this.value;
-  let rows = document.querySelectorAll("#billTable tr");
-
-  rows.forEach((row) => {
-    if (filter === "all" || row.dataset.status === filter) {
-      row.style.display = "";
-    } else {
-      row.style.display = "none";
-    }
-  });
-});
-function openDetail(row) {
-  currentRow = row;
-
-  let id = row.children[0].innerText;
-  let customer = row.children[1].innerText;
-  let phone = row.children[2].innerText;
-
-  let status = row.dataset.status;
-
-  document.getElementById("detailId").innerText = id;
-  document.getElementById("detailCustomer").innerText = customer;
-  document.getElementById("detailPhone").innerText = phone;
-  document.getElementById("detailAddress").innerText = "123 Nguyễn Trãi";
-
-  document.getElementById("detailProducts").innerHTML = `
-<tr>
-<td>Cà phê sữa</td>
-<td>2</td>
-<td>${formatPrice(25000)}</td>
-<td>${formatPrice(50000)}</td>
-</tr>
-
-<tr>
-<td>Bạc xỉu</td>
-<td>1</td>
-<td>${formatPrice(30000)}</td>
-<td>${formatPrice(30000)}</td>
-</tr>
-`;
-
-  document.getElementById("detailTotal").innerText = formatPrice(80000);
-
-  renderActions(status);
-
-  document.getElementById("billModal").style.display = "flex";
+function getStatusText(status) {
+  switch (status) {
+    case 1:
+      return "Chờ xác nhận";
+    case 2:
+      return "Đang giao";
+    case 3:
+      return "Hoàn thành";
+    case 4:
+      return "Đã huỷ";
+    default:
+      return "Không rõ";
+  }
 }
+
+/* ========================= */
+/* LOAD BILL */
+/* ========================= */
+
+async function loadBills() {
+  try {
+    const token = getToken();
+
+    const res = await fetch(`${API_BASE}/get-all-bill`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    bills = await res.json();
+    filteredBills = [...bills];
+
+    renderBills();
+    renderPagination();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+/* ========================= */
+/* BILL DETAIL */
+/* ========================= */
+
+async function openDetail(id) {
+  try {
+    currentBillId = id;
+
+    const token = getToken();
+
+    const res = await fetch(`${API_BASE}/get-bill-detail/${id}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    const data = await res.json();
+
+    if (!data || data.length === 0) return;
+
+    const first = data[0];
+
+    document.getElementById("detailId").innerText = id;
+    document.getElementById("detailCustomer").innerText = first.customerName;
+    document.getElementById("detailPhone").innerText = first.phone;
+    document.getElementById("detailAddress").innerText = first.address;
+    document.getElementById("detailStatus").innerText = getStatusText(
+      first.status,
+    );
+    let productHtml = "";
+    let total = 0;
+
+    data.forEach((p) => {
+      total += p.subTotal;
+
+      productHtml += `
+        <tr>
+          <td>${p.coffeeName}</td>
+          <td>${p.quantity}</td>
+          <td>${formatPrice(p.unitPrice)}</td>
+          <td>${formatPrice(p.subTotal)}</td>
+        </tr>
+      `;
+    });
+
+    document.getElementById("detailProducts").innerHTML = productHtml;
+    document.getElementById("detailTotal").innerText = formatPrice(total);
+
+    renderActions(first.status);
+
+    document.getElementById("billModal").style.display = "flex";
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+/* ========================= */
+/* UPDATE STATUS */
+/* ========================= */
+
+async function updateStatus(billId, status) {
+  try {
+    const token = getToken();
+
+    const res = await fetch(
+      `${API_BASE}/update-status?billId=${billId}&status=${status}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      },
+    );
+
+    const msg = await res.text();
+
+    alert(msg);
+
+    closeModal();
+
+    loadBills();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+/* ========================= */
+/* ACTION BUTTONS */
+/* ========================= */
+
+function confirmOrder(id) {
+  updateStatus(id, 2);
+}
+
+function completeOrder(id) {
+  updateStatus(id, 3);
+}
+
+function cancelOrder(id) {
+  updateStatus(id, 4);
+}
+
+/* ========================= */
+/* MODAL ACTION */
+/* ========================= */
+
 function renderActions(status) {
-  let actions = document.getElementById("detailActions");
-  let statusSpan = document.getElementById("detailStatus");
+  const actions = document.getElementById("detailActions");
 
   actions.innerHTML = "";
 
-  if (status === "pending") {
-    statusSpan.innerText = "Chờ xác nhận";
+  const id = currentBillId;
 
+  if (status === 1) {
     actions.innerHTML = `
-
-<button onclick="confirmDetail()">Xác nhận</button>
-<button onclick="cancelDetail()">Huỷ</button>
-
-`;
+      <button onclick="confirmOrder(${id})">Xác nhận</button>
+      <button onclick="cancelOrder(${id})">Huỷ</button>
+    `;
   }
 
-  if (status === "processing") {
-    statusSpan.innerText = "Đang giao";
-
-    let id = document.getElementById("detailId").innerText;
-
+  if (status === 2) {
     actions.innerHTML = `
-<button onclick="doneDetail()">Đã giao</button>
-<button onclick="cancelDetail()">Huỷ</button>
-<button onclick="exportBillPDF('${id}')">Xuất hóa đơn</button>
-`;
-  }
-
-  if (status === "done") {
-    statusSpan.innerText = "Hoàn thành";
-  }
-
-  if (status === "cancel") {
-    statusSpan.innerText = "Đã huỷ";
+      <button onclick="completeOrder(${id})">Đã giao</button>
+      <button onclick="cancelOrder(${id})">Huỷ</button>
+      <button onclick="exportBillPDF('${id}')">Xuất hóa đơn</button>
+    `;
   }
 }
+
+/* ========================= */
+/* CLOSE MODAL */
+/* ========================= */
+
 function closeModal() {
   document.getElementById("billModal").style.display = "none";
 }
 
-window.onclick = function (e) {
-  let modal = document.getElementById("billModal");
-
-  if (e.target === modal) {
-    modal.style.display = "none";
-  }
-};
-let rowsPerPage = 10;
-let currentPage = 1;
-
-function paginateTable() {
-  let table = document.getElementById("billTable");
-  let rows = table.querySelectorAll("tr");
-
-  let totalRows = rows.length;
-  let totalPages = Math.ceil(totalRows / rowsPerPage);
-
-  rows.forEach((row, index) => {
-    if (
-      index >= (currentPage - 1) * rowsPerPage &&
-      index < currentPage * rowsPerPage
-    ) {
-      row.style.display = "";
-    } else {
-      row.style.display = "none";
-    }
-  });
-
-  renderPagination(totalPages);
-}
-function renderPagination(totalPages) {
-  let container = document.getElementById("pagination");
-
-  container.innerHTML = "";
-
-  let prev = document.createElement("button");
-  prev.innerText = "Prev";
-
-  prev.disabled = currentPage === 1;
-
-  prev.onclick = function () {
-    currentPage--;
-    paginateTable();
-  };
-
-  container.appendChild(prev);
-
-  for (let i = 1; i <= totalPages; i++) {
-    let btn = document.createElement("button");
-
-    btn.innerText = i;
-
-    if (i === currentPage) {
-      btn.classList.add("active");
-    }
-
-    btn.onclick = function () {
-      currentPage = i;
-      paginateTable();
-    };
-
-    container.appendChild(btn);
-  }
-
-  let next = document.createElement("button");
-  next.innerText = "Next";
-
-  next.disabled = currentPage === totalPages;
-
-  next.onclick = function () {
-    currentPage++;
-    paginateTable();
-  };
-
-  container.appendChild(next);
-}
-window.onload = function () {
-  paginateTable();
-};
-function confirmDetail() {
-  if (!currentRow) return;
-
-  confirmOrder(currentRow.querySelector("button"));
-
-  renderActions("processing");
-}
-
-function doneDetail() {
-  if (!currentRow) return;
-
-  completeOrder(currentRow.querySelector("button"));
-
-  renderActions("done");
-}
-
-function cancelDetail() {
-  if (!currentRow) return;
-
-  cancelOrder(currentRow.querySelector("button"));
-
-  renderActions("cancel");
-}
-document.getElementById("searchBill").addEventListener("keyup", function () {
-  let keyword = this.value.toLowerCase();
-
-  let rows = document.querySelectorAll("#billTable tr");
-
-  rows.forEach((row) => {
-    let id = row.children[0].innerText.toLowerCase();
-    let name = row.children[1].innerText.toLowerCase();
-    let phone = row.children[2].innerText.toLowerCase();
-
-    if (
-      id.includes(keyword) ||
-      name.includes(keyword) ||
-      phone.includes(keyword)
-    ) {
-      row.style.display = "";
-    } else {
-      row.style.display = "none";
-    }
-  });
-});
-function filterByDate() {
-  let from = document.getElementById("fromDate").value;
-  let to = document.getElementById("toDate").value;
-
-  let rows = document.querySelectorAll("#billTable tr");
-
-  rows.forEach((row) => {
-    let rowDate = new Date(row.dataset.date);
-
-    if (!from && !to) {
-      row.style.display = "";
-      return;
-    }
-
-    let fromDate = from ? new Date(from) : null;
-    let toDate = to ? new Date(to) : null;
-
-    if ((!fromDate || rowDate >= fromDate) && (!toDate || rowDate <= toDate)) {
-      row.style.display = "";
-    } else {
-      row.style.display = "none";
-    }
-  });
-}
-document.getElementById("sortTime").addEventListener("change", function () {
-  let type = this.value;
-
-  let table = document.getElementById("billTable");
-  let rows = Array.from(table.querySelectorAll("tr"));
-
-  rows.sort((a, b) => {
-    let timeA = new Date(a.dataset.date);
-    let timeB = new Date(b.dataset.date);
-
-    return type === "new" ? timeB - timeA : timeA - timeB;
-  });
-
-  table.innerHTML = "";
-
-  rows.forEach((row) => table.appendChild(row));
-
-  paginateTable();
-});
+/* ========================= */
+/* EXPORT PDF */
+/* ========================= */
 
 function exportBillPDF(id) {
   const { jsPDF } = window.jspdf;
 
-  let doc = new jsPDF();
+  const doc = new jsPDF();
 
-  doc.setFont("NotoSans-Regular");
+  doc.text("KURUMI COFFEE", 105, 20, null, null, "center");
+  doc.text("HÓA ĐƠN THANH TOÁN", 105, 30, null, null, "center");
 
-  let rows = document.querySelectorAll("#billTable tr");
-  let row = null;
+  doc.text("Mã hóa đơn: " + id, 20, 50);
+  doc.text("Ngày: " + new Date().toLocaleString(), 20, 60);
 
-  rows.forEach((r) => {
-    if (r.children[0].innerText === id) {
-      row = r;
-    }
-  });
-
-  if (!row) {
-    alert("Không tìm thấy hóa đơn");
-    return;
-  }
-
-  let customer = row.children[1].innerText;
-
-  let y = 20;
-
-  doc.setFontSize(16);
-  doc.text("KURUMI COFFEE", 105, y, null, null, "center");
-
-  y += 10;
-
-  doc.setFontSize(14);
-  doc.text("HÓA ĐƠN THANH TOÁN", 105, y, null, null, "center");
-
-  y += 15;
-
-  doc.setFontSize(11);
-
-  doc.text("Mã hóa đơn: " + id, 20, y);
-  y += 7;
-
-  doc.text("Ngày: " + new Date().toLocaleString(), 20, y);
-  y += 7;
-
-  doc.text("Khách hàng: " + customer, 20, y);
-
-  y += 10;
-
-  doc.text("---------------------------------------", 20, y);
-  y += 8;
-
-  doc.text("Tên món", 20, y);
-  doc.text("SL", 100, y);
-  doc.text("Giá", 130, y);
-  doc.text("Tổng", 160, y);
-
-  y += 8;
-
-  doc.text("---------------------------------------", 20, y);
-  y += 8;
-
-  doc.text("Cà phê sữa", 20, y);
-  doc.text("2", 100, y);
-  doc.text("25.000", 130, y);
-  doc.text("50.000", 160, y);
-
-  y += 8;
-
-  doc.text("Bạc xỉu", 20, y);
-  doc.text("1", 100, y);
-  doc.text("30.000", 130, y);
-  doc.text("30.000", 160, y);
-
-  y += 10;
-
-  doc.text("---------------------------------------", 20, y);
-
-  y += 10;
-
-  doc.setFontSize(13);
-  doc.text("Tổng tiền: 80.000đ", 20, y);
-
-  y += 20;
-
-  doc.setFontSize(10);
-  doc.text("Quét QR để thanh toán", 105, y, null, null, "center");
+  doc.text("Cảm ơn quý khách!", 105, 100, null, null, "center");
 
   doc.save("hoadon_" + id + ".pdf");
 }
+
+/* ========================= */
+/* LOAD BILLS */
+/* ========================= */
+function renderBills() {
+  const table = document.getElementById("billTable");
+  table.innerHTML = "";
+
+  const start = (currentPage - 1) * pageSize;
+  const pageData = filteredBills.slice(start, start + pageSize);
+
+  pageData.forEach((bill) => {
+    let actions = "";
+
+    if (bill.status === 1) {
+      actions = `
+        <button onclick="confirmOrder(${bill.billID})">Xác nhận</button>
+        <button onclick="cancelOrder(${bill.billID})">Huỷ</button>
+      `;
+    }
+
+    if (bill.status === 2) {
+      actions = `
+        <button onclick="completeOrder(${bill.billID})">Đã giao</button>
+        <button onclick="cancelOrder(${bill.billID})">Huỷ</button>
+        <button onclick="exportBillPDF('${bill.billID}')">Xuất hóa đơn</button>
+      `;
+    }
+
+    table.innerHTML += `
+    <tr onclick="openDetail(${bill.billID})">
+      <td>${bill.billID}</td>
+      <td>${bill.customerName}</td>
+      <td>${bill.phone}</td>
+      <td>${new Date(bill.billDate).toLocaleString()}</td>
+      <td>
+        <span class="status">${getStatusText(bill.status)}</span>
+      </td>
+      <td onclick="event.stopPropagation()">
+        ${actions}
+      </td>
+    </tr>
+    `;
+  });
+}
+/* ========================= */
+/* LOAD PAGINATION */
+/* ========================= */
+function renderPagination() {
+  const pagination = document.getElementById("pagination");
+  pagination.innerHTML = "";
+
+  const totalPages = Math.ceil(filteredBills.length / pageSize);
+
+  for (let i = 1; i <= totalPages; i++) {
+    pagination.innerHTML += `
+      <button onclick="changePage(${i})" 
+      class="${i === currentPage ? "active" : ""}">
+        ${i}
+      </button>
+    `;
+  }
+}
+
+/* ========================= */
+/* CHANGE PAGE */
+/* ========================= */
+function changePage(page) {
+  currentPage = page;
+  renderBills();
+  renderPagination();
+}
+
+/* ========================= */
+/* SEARCH */
+/* ========================= */
+
+document.getElementById("searchBill").addEventListener("input", function () {
+  const keyword = this.value.toLowerCase();
+
+  filteredBills = bills.filter(
+    (b) =>
+      b.billID.toString().includes(keyword) ||
+      b.customerName.toLowerCase().includes(keyword) ||
+      b.phone.includes(keyword),
+  );
+
+  currentPage = 1;
+  renderBills();
+  renderPagination();
+});
+
+/* ========================= */
+/* FILTER */
+/* ========================= */
+document.getElementById("statusFilter").addEventListener("change", function () {
+  const value = this.value;
+
+  filteredBills = bills.filter((b) => {
+    if (value === "all") return true;
+    if (value === "pending") return b.status === 1;
+    if (value === "processing") return b.status === 2;
+    if (value === "done") return b.status === 3;
+    if (value === "cancel") return b.status === 4;
+  });
+
+  currentPage = 1;
+  renderBills();
+  renderPagination();
+});
+
+/* ========================= */
+/* FILTER BY DATE */
+/* ========================= */
+
+function filterByDate() {
+  const from = document.getElementById("fromDate").value;
+  const to = document.getElementById("toDate").value;
+
+  filteredBills = bills.filter((b) => {
+    const date = new Date(b.billDate);
+
+    if (from && date < new Date(from)) return false;
+    if (to && date > new Date(to)) return false;
+
+    return true;
+  });
+
+  currentPage = 1;
+  renderBills();
+  renderPagination();
+}
+
+/* ========================= */
+/* SORT BY TIME */
+/* ========================= */
+
+document.getElementById("sortTime").addEventListener("change", function () {
+  const value = this.value;
+
+  filteredBills.sort((a, b) => {
+    if (value === "new") return new Date(b.billDate) - new Date(a.billDate);
+    else return new Date(a.billDate) - new Date(b.billDate);
+  });
+
+  renderBills();
+});
+
+/* ========================= */
+/* RESET FILTER */
+/* ========================= */
+
+function resetFilter() {
+  document.getElementById("searchBill").value = "";
+  document.getElementById("fromDate").value = "";
+  document.getElementById("toDate").value = "";
+
+  document.getElementById("statusFilter").value = "all";
+  document.getElementById("sortTime").value = "new";
+
+  filteredBills = [...bills];
+
+  filteredBills.sort((a, b) => {
+    return new Date(b.billDate) - new Date(a.billDate);
+  });
+
+  currentPage = 1;
+
+  renderBills();
+  renderPagination();
+}
+
+/* ========================= */
+/* INIT */
+/* ========================= */
+
+window.onload = function () {
+  loadBills();
+};
